@@ -170,6 +170,78 @@
   .sk-btn    { height:32px; width:110px; border-radius:8px; }
   @keyframes shimmer { to { background-position:-200% 0; } }
 
+  /* ═══ SEARCH TABS ═══ */
+  .search-tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:12px; }
+  .stab { flex:1; padding:9px 10px; background:none; border:none; color:var(--faint); font-size:12px; font-weight:700; letter-spacing:.3px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s; }
+  .stab:hover { color:var(--sub); }
+  .stab.active { color:var(--accent-h); border-bottom-color:var(--accent-h); }
+  .stab-icon { font-size:14px; }
+
+  /* CV Upload Panel */
+  .cv-panel { display:none; }
+  .cv-panel.active { display:block; }
+  .kw-panel.hidden { display:none; }
+
+  .cv-dropzone {
+    border:2px dashed var(--border-h); border-radius:12px;
+    padding:24px 16px; text-align:center; cursor:pointer;
+    transition:all .2s; margin-bottom:10px; background:var(--card);
+    position:relative;
+  }
+  .cv-dropzone.drag-over { border-color:var(--accent-h); background:rgba(99,102,241,.08); }
+  .cv-dropzone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .cv-dz-icon { font-size:28px; margin-bottom:6px; }
+  .cv-dz-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:3px; }
+  .cv-dz-sub { font-size:11px; color:var(--faint); }
+  .cv-dz-types { font-size:10px; color:var(--faint); margin-top:4px; opacity:.7; }
+
+  .cv-or { display:flex; align-items:center; gap:8px; margin:10px 0; color:var(--faint); font-size:11px; }
+  .cv-or::before, .cv-or::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .cv-textarea { width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:9px; padding:10px 12px; font-size:12px; line-height:1.6; resize:vertical; min-height:90px; font-family:inherit; transition:border .15s; }
+  .cv-textarea:focus { outline:none; border-color:var(--accent-h); }
+  .cv-textarea::placeholder { color:var(--faint); }
+
+  .btn-parse { width:100%; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none; border-radius:9px; padding:11px; font-size:13.5px; font-weight:700; cursor:pointer; margin-top:10px; display:flex; align-items:center; justify-content:center; gap:8px; transition:opacity .15s, box-shadow .15s; box-shadow:0 4px 14px rgba(99,102,241,.3); }
+  .btn-parse:hover { opacity:.9; }
+  .btn-parse:disabled { opacity:.5; cursor:not-allowed; }
+
+  .cv-extracted {
+    background:rgba(99,102,241,.07); border:1px solid rgba(99,102,241,.2);
+    border-radius:10px; padding:12px 14px; margin-top:10px; display:none;
+  }
+  .cv-extracted.show { display:block; }
+  .cv-ext-title { font-size:11px; font-weight:800; color:var(--accent-h); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; display:flex; align-items:center; gap:5px; }
+  .cv-ext-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px; }
+  .cv-ext-chip { background:rgba(99,102,241,.12); border:1px solid rgba(99,102,241,.22); color:#a5b4fc; border-radius:5px; padding:2px 8px; font-size:10.5px; font-weight:500; }
+  .cv-ext-chip.title { background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.25); color:#4ade80; }
+  .cv-summary { font-size:11.5px; color:var(--sub); line-height:1.6; margin-top:6px; }
+
+  /* Infinite scroll sentinel + spinner */
+  .scroll-sentinel { height:1px; }
+  .scroll-loading { display:none; padding:16px; text-align:center; }
+  .scroll-loading.show { display:block; }
+  .scroll-spin { display:inline-block; width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent-h); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* CV match section in detail */
+  .dp-match { background:rgba(99,102,241,.06); border:1px solid rgba(99,102,241,.18); border-radius:11px; padding:14px 16px; margin-bottom:20px; }
+  .dp-match-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .dp-match-title { font-size:11px; font-weight:800; color:var(--accent-h); text-transform:uppercase; letter-spacing:.6px; }
+  .dp-match-score { font-size:20px; font-weight:800; }
+  .dp-match-score.high   { color:#4ade80; }
+  .dp-match-score.medium { color:#fbbf24; }
+  .dp-match-score.low    { color:#f87171; }
+  .dp-match-bar { height:6px; background:var(--border); border-radius:3px; margin-bottom:10px; overflow:hidden; }
+  .dp-match-fill { height:100%; border-radius:3px; transition:width .4s ease; }
+  .dp-match-fill.high   { background:linear-gradient(90deg,#22c55e,#4ade80); }
+  .dp-match-fill.medium { background:linear-gradient(90deg,#f59e0b,#fbbf24); }
+  .dp-match-fill.low    { background:linear-gradient(90deg,#ef4444,#f87171); }
+  .dp-match-chips { display:flex; flex-wrap:wrap; gap:5px; }
+  .dp-match-chip         { border-radius:5px; padding:3px 9px; font-size:11px; font-weight:500; }
+  .dp-match-chip.matched { background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.25); color:#4ade80; }
+  .dp-match-chip.missing { background:rgba(239,68,68,.07);  border:1px solid rgba(239,68,68,.2);  color:#fca5a5; }
+
   /* ═══ JOB LIST CARD ═══ */
   .job-card {
     padding:14px 16px; border-bottom:1px solid var(--border);
@@ -463,16 +535,52 @@
     </div>
     <div class="sidebar-inner">
 
-      <!-- Keyword + Search -->
-      <div class="search-hero">
-        <div class="kw-wrap">
-          <svg class="kw-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="kw-input" id="kwInput" type="text" placeholder="Job title, skills, keywords…" />
-        </div>
-        <button class="btn-search" id="searchBtn" onclick="doSearch()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Search Jobs
+      <!-- ── Search Mode Tabs ── -->
+      <div class="search-tabs">
+        <button class="stab active" id="tabKw" onclick="switchTab('kw')">
+          <span class="stab-icon">🔍</span> Keyword Search
         </button>
+        <button class="stab" id="tabCv" onclick="switchTab('cv')">
+          <span class="stab-icon">📄</span> Upload CV
+        </button>
+      </div>
+
+      <!-- Keyword panel -->
+      <div class="kw-panel" id="kwPanel">
+        <div class="search-hero">
+          <div class="kw-wrap">
+            <svg class="kw-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="kw-input" id="kwInput" type="text" placeholder="Job title, skills, keywords…" />
+          </div>
+          <button class="btn-search" id="searchBtn" onclick="doSearch()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search Jobs
+          </button>
+        </div>
+      </div>
+
+      <!-- CV upload panel -->
+      <div class="cv-panel" id="cvPanel">
+        <!-- Drag-drop zone -->
+        <div class="cv-dropzone" id="cvDropzone">
+          <input type="file" id="cvFileInput" accept=".pdf,.txt,.doc,.docx,.md" />
+          <div class="cv-dz-icon">📋</div>
+          <div class="cv-dz-title">Drop your CV / Resume here</div>
+          <div class="cv-dz-sub">or click to browse files</div>
+          <div class="cv-dz-types">PDF · TXT · DOC · DOCX · MD</div>
+        </div>
+        <div class="cv-or">or paste below</div>
+        <textarea class="cv-textarea" id="cvTextarea" placeholder="Paste your CV / resume text here…" rows="5"></textarea>
+        <button class="btn-parse" id="parseBtn" onclick="parseCV()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Analyse CV with Gemma &amp; Search
+        </button>
+        <!-- Extracted data preview -->
+        <div class="cv-extracted" id="cvExtracted">
+          <div class="cv-ext-title">✨ Extracted from CV</div>
+          <div class="cv-ext-row" id="cvExtChips"></div>
+          <div class="cv-summary" id="cvSummary"></div>
+        </div>
       </div>
 
       <!-- Location + Country -->
@@ -666,9 +774,11 @@
         </div>
         <!-- Cards injected here -->
         <div id="jobsGrid"></div>
-        <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
-          <button class="btn-loadmore" id="loadMoreBtn" onclick="loadMore()">Load more results</button>
+        <!-- Infinite scroll -->
+        <div class="scroll-loading" id="scrollLoading">
+          <div class="scroll-spin"></div>
         </div>
+        <div class="scroll-sentinel" id="scrollSentinel"></div>
       </div>
 
       <!-- Job detail -->
@@ -699,7 +809,7 @@
 const GW          = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
 const MAX_SEARCHES = 5;
 const CACHE_TTL   = 30 * 60 * 1000;
-const PAGE_SIZE   = 25;
+const PAGE_SIZE   = 20;   // load 20 at a time via infinite scroll
 const MAX_RESULTS = 100;
 
 const PORTALS = [
@@ -762,6 +872,9 @@ function updateQuotaUI() {
 // ═══════════════════════════════════════════
 let allResults=[], displayedCount=PAGE_SIZE, activePortals=new Set(PORTALS.map(p=>p.id));
 let fromCache=false, wasEnhanced=false, selectedIdx=-1;
+let cvData=null;        // parsed CV data when in CV mode
+let searchMode='kw';    // 'kw' | 'cv'
+let scrollObserver=null;
 
 // ═══════════════════════════════════════════
 // INIT
@@ -776,7 +889,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     const el=document.getElementById(id);
     if(el) el.addEventListener('keydown',go);
   });
-  // Sync all keyword inputs
+  // Sync keyword inputs
   const syncKw = (src,targets) => {
     document.getElementById(src)?.addEventListener('input',e=>{
       targets.forEach(id=>{ const t=document.getElementById(id); if(t) t.value=e.target.value; });
@@ -785,6 +898,10 @@ window.addEventListener('DOMContentLoaded',()=>{
   syncKw('navSearch',['kwInput','mobKwInput']);
   syncKw('kwInput',['navSearch','mobKwInput']);
   syncKw('mobKwInput',['kwInput','navSearch']);
+  // CV drag-drop wiring
+  initCVDrop();
+  // Infinite scroll
+  initInfiniteScroll();
   initPTR();
 });
 function fmtDate(d){ return d.toISOString().slice(0,10); }
@@ -1051,20 +1168,24 @@ function isRecent(d,days){ try{ return (Date.now()-new Date(d))<days*86400000; }
 // ═══════════════════════════════════════════
 // RENDER LIST
 // ═══════════════════════════════════════════
-function renderResults(){
+function renderResults(append=false){
   const grid=document.getElementById('jobsGrid');
-  grid.innerHTML='';
-  getSorted().slice(0,displayedCount).forEach((job,i)=>grid.appendChild(buildListCard(job,i)));
+  const sorted=getSorted();
+  if(!append){
+    grid.innerHTML='';
+    sorted.slice(0,displayedCount).forEach((job,i)=>grid.appendChild(buildListCard(job,i)));
+  } else {
+    // append next batch
+    const start=displayedCount-PAGE_SIZE;
+    sorted.slice(start,displayedCount).forEach((job,i)=>grid.appendChild(buildListCard(job,start+i)));
+  }
   document.getElementById('resultsHeader').style.display='flex';
-  document.getElementById('resultCount').innerHTML=`<strong>${allResults.length}</strong> job${allResults.length!==1?'s':''} found`;
+  const cvBadge=cvData?` <span class="badge-pill bp-ai">📄 CV Match</span>`:'';
+  document.getElementById('resultCount').innerHTML=`<strong>${allResults.length}</strong> job${allResults.length!==1?'s':''} found${cvBadge}`;
   document.getElementById('cacheBadge').style.display=fromCache?'inline':'none';
   document.getElementById('semBadge').style.display=wasEnhanced?'inline':'none';
-  const rem=allResults.length-displayedCount;
-  document.getElementById('loadMoreWrap').style.display=rem>0?'flex':'none';
-  const lb=document.getElementById('loadMoreBtn');
-  if(lb&&rem>0) lb.textContent=`Load more (${rem} remaining)`;
-  // Auto-select first result
-  if(allResults.length>0) selectJob(0);
+  // Auto-select first result on fresh search
+  if(!append && allResults.length>0) selectJob(0);
 }
 
 // Gradient palettes for company avatar fallbacks (12 options)
@@ -1160,6 +1281,22 @@ function selectJob(i){
     `<span class="dp-meta-item" style="color:var(--accent-h)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>${esc(safeHost(job.url))}</span>`,
   ].filter(Boolean).join('');
 
+  // CV match
+  const match=computeMatch(job);
+  const matchClass=match?(match.score>=70?'high':match.score>=40?'medium':'low'):'';
+  const matchHtml=match?`
+    <div class="dp-match">
+      <div class="dp-match-header">
+        <div class="dp-match-title">🎯 CV Match Analysis</div>
+        <div class="dp-match-score ${matchClass}">${match.score}%</div>
+      </div>
+      <div class="dp-match-bar"><div class="dp-match-fill ${matchClass}" style="width:${match.score}%"></div></div>
+      <div class="dp-match-chips">
+        ${match.matched.map(s=>`<span class="dp-match-chip matched">✓ ${esc(s)}</span>`).join('')}
+        ${match.missing.map(s=>`<span class="dp-match-chip missing">✗ ${esc(s)}</span>`).join('')}
+      </div>
+    </div>`:'' ;
+
   // Quick facts grid
   const facts=[
     job.jobType?['Job Type',job.jobType]:'',
@@ -1213,6 +1350,7 @@ function selectJob(i){
       </button>
     </div>
     <div class="dp-body">
+      ${matchHtml}
       ${factsHtml}
       ${skillsHtml}
       ${descHtml}
@@ -1282,10 +1420,11 @@ function getSorted(){
   if(mode==='oldest') c.sort((a,b)=>(a.postedDate||'').localeCompare(b.postedDate||''));
   return c;
 }
-function sortAndRender(){ if(allResults.length){ renderResults(); showState('results'); } }
+function sortAndRender(){ if(allResults.length){ displayedCount=PAGE_SIZE; renderResults(false); showState('results'); } }
 function loadMore(){
+  if(displayedCount>=allResults.length) return;
   displayedCount=Math.min(displayedCount+PAGE_SIZE, allResults.length);
-  renderResults(); showState('results');
+  renderResults(true);
 }
 
 // ═══════════════════════════════════════════
@@ -1322,12 +1461,202 @@ function clearSearch(){
   ['countrySelect','typeSelect','expSelect'].forEach(id=>document.getElementById(id).value='');
   allResults=[]; document.getElementById('jobsGrid').innerHTML='';
   document.getElementById('resultsHeader').style.display='none';
-  document.getElementById('loadMoreWrap').style.display='none';
+  cvData=null;
+  // Reset CV panel
+  const cvExt=document.getElementById('cvExtracted');
+  if(cvExt) cvExt.classList.remove('show');
+  const ta=document.getElementById('cvTextarea');
+  if(ta) ta.value='';
   clearDetail(); showState('empty');
 }
 function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function copyLink(url){ navigator.clipboard.writeText(url).then(()=>showToast('✅ Link copied!')); }
 let _tt; function showToast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),3000); }
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+function switchTab(mode){
+  searchMode=mode;
+  document.getElementById('tabKw').classList.toggle('active', mode==='kw');
+  document.getElementById('tabCv').classList.toggle('active', mode==='cv');
+  document.getElementById('kwPanel').classList.toggle('hidden', mode==='cv');
+  document.getElementById('cvPanel').classList.toggle('active', mode==='cv');
+  if(mode==='cv'){
+    document.getElementById('cvTextarea').focus();
+  }
+}
+
+// ═══════════════════════════════════════════
+// INFINITE SCROLL
+// ═══════════════════════════════════════════
+function initInfiniteScroll(){
+  const sentinel=document.getElementById('scrollSentinel');
+  const loader=document.getElementById('scrollLoading');
+  if(!sentinel) return;
+  scrollObserver=new IntersectionObserver(entries=>{
+    if(!entries[0].isIntersecting) return;
+    if(displayedCount>=allResults.length) return;
+    loader.classList.add('show');
+    setTimeout(()=>{
+      loadMore();
+      loader.classList.remove('show');
+    }, 350); // brief delay to show spinner
+  },{root:document.getElementById('jobsList'), threshold:0.1});
+  scrollObserver.observe(sentinel);
+}
+
+// ═══════════════════════════════════════════
+// CV UPLOAD & PARSE
+// ═══════════════════════════════════════════
+function initCVDrop(){
+  const dz=document.getElementById('cvDropzone');
+  const fi=document.getElementById('cvFileInput');
+  if(!dz||!fi) return;
+  // File input change
+  fi.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(file) readCVFile(file);
+  });
+  // Drag-drop visual
+  dz.addEventListener('dragover',e=>{ e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+  dz.addEventListener('drop',e=>{
+    e.preventDefault(); dz.classList.remove('drag-over');
+    const file=e.dataTransfer?.files[0];
+    if(file) readCVFile(file);
+  });
+}
+
+function readCVFile(file){
+  const ta=document.getElementById('cvTextarea');
+  const dz=document.getElementById('cvDropzone');
+  const name=file.name||'';
+  const ext=name.split('.').pop().toLowerCase();
+
+  if(ext==='pdf'){
+    // Use PDF.js for client-side PDF text extraction
+    loadPdfJs().then(()=>{
+      const reader=new FileReader();
+      reader.onload=async e=>{
+        try {
+          const pdf=await pdfjsLib.getDocument({data:e.target.result}).promise;
+          let text='';
+          for(let i=1;i<=Math.min(pdf.numPages,10);i++){
+            const page=await pdf.getPage(i);
+            const content=await page.getTextContent();
+            text+=content.items.map(it=>it.str).join(' ')+'\n';
+          }
+          ta.value=text.trim();
+          updateDropzoneLabel(name);
+          showToast(`✅ PDF loaded: ${pdf.numPages} page(s)`);
+        } catch(err){
+          showToast('⚠️ Could not parse PDF. Try copy-pasting the text below.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  } else {
+    // Plain text / doc
+    const reader=new FileReader();
+    reader.onload=e=>{ ta.value=e.target.result||''; updateDropzoneLabel(name); };
+    reader.onerror=()=>showToast('⚠️ Could not read file. Try pasting the text.');
+    reader.readAsText(file);
+  }
+}
+
+let pdfJsLoaded=false;
+function loadPdfJs(){
+  if(pdfJsLoaded) return Promise.resolve();
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{
+      pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      pdfJsLoaded=true; resolve();
+    };
+    s.onerror=reject;
+    document.head.appendChild(s);
+  });
+}
+
+function updateDropzoneLabel(name){
+  const dz=document.getElementById('cvDropzone');
+  const titleEl=dz.querySelector('.cv-dz-title');
+  const subEl=dz.querySelector('.cv-dz-sub');
+  if(titleEl) titleEl.textContent=name;
+  if(subEl) subEl.textContent='File loaded — click Analyse to search';
+}
+
+async function parseCV(){
+  const text=document.getElementById('cvTextarea').value.trim();
+  if(text.length<20){ showToast('⚠️ Please paste your CV text or upload a file first.'); return; }
+
+  const btn=document.getElementById('parseBtn');
+  btn.disabled=true;
+  btn.innerHTML=`<div class="scroll-spin" style="width:16px;height:16px;border-width:2px;margin-right:8px"></div> Analysing with Gemma…`;
+
+  try {
+    const r=await fetch('/api/cv-parse',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-gateway-token':GW},
+      body:JSON.stringify({text})
+    });
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Parse failed');
+
+    cvData=data;
+    showCVExtracted(data);
+
+    // Auto-populate keyword/filter fields
+    if(data.title)      document.getElementById('kwInput').value=data.title;
+    if(data.location)   document.getElementById('locInput').value=data.location;
+    if(data.experience){
+      const expSel=document.getElementById('expSelect');
+      const expMap={'entry level':'entry level','mid level':'mid level','senior':'senior','manager':'manager','executive':'executive'};
+      const matched=Object.keys(expMap).find(k=>data.experience.toLowerCase().includes(k));
+      if(matched) expSel.value=expMap[matched];
+    }
+
+    showToast('✅ CV analysed! Searching matching jobs…');
+    // Switch to keyword panel view so user sees filters
+    switchTab('kw');
+    // Run the search
+    await doSearch();
+
+  } catch(err){
+    showToast('⚠️ CV analysis failed: '+err.message);
+  } finally {
+    btn.disabled=false;
+    btn.innerHTML=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Analyse CV with Gemma &amp; Search`;
+  }
+}
+
+function showCVExtracted(data){
+  const box=document.getElementById('cvExtracted');
+  const chips=document.getElementById('cvExtChips');
+  const sum=document.getElementById('cvSummary');
+  chips.innerHTML='';
+  if(data.title) chips.innerHTML+=`<span class="cv-ext-chip title">🎯 ${esc(data.title)}</span>`;
+  if(data.experience) chips.innerHTML+=`<span class="cv-ext-chip">📊 ${esc(data.experience)}</span>`;
+  if(data.location) chips.innerHTML+=`<span class="cv-ext-chip">📍 ${esc(data.location)}</span>`;
+  if(data.yearsExp) chips.innerHTML+=`<span class="cv-ext-chip">⏱️ ${data.yearsExp} yrs</span>`;
+  (data.skills||[]).slice(0,8).forEach(s=>chips.innerHTML+=`<span class="cv-ext-chip">${esc(s)}</span>`);
+  sum.textContent=data.summary||'';
+  box.classList.add('show');
+}
+
+// ═══════════════════════════════════════════
+// CV MATCH (used in detail panel)
+// ═══════════════════════════════════════════
+function computeMatch(job){
+  if(!cvData?.skills?.length || !job.skills?.length) return null;
+  const cv=cvData.skills.map(s=>s.toLowerCase());
+  const matched=job.skills.filter(s=>cv.some(c=>c===s.toLowerCase()||c.includes(s.toLowerCase())||s.toLowerCase().includes(c)));
+  const missing=job.skills.filter(s=>!matched.includes(s)).slice(0,5);
+  const score=Math.round((matched.length/Math.max(job.skills.length,1))*100);
+  return {matched, missing, score};
+}
 
 // ═══════════════════════════════════════════
 // PULL TO REFRESH
