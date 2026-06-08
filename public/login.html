@@ -137,11 +137,12 @@
 <div class="hero-panel" id="heroPanel">
   <img src="/hero.jpg" alt="Young professional searching for jobs" />
   <div class="hero-overlay"></div>
+  <!-- Caption swaps content based on region via JS -->
   <div class="hero-caption">
-    <div class="hero-tag">Global Opportunities</div>
-    <h2>Your next career move<br/>starts <span>right here</span></h2>
-    <p>Search 100+ live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.</p>
-    <div class="hero-stats">
+    <div class="hero-tag" id="heroTag">Global Opportunities</div>
+    <h2 id="heroHeadline">Your next career move<br/>starts <span>right here</span></h2>
+    <p id="heroBody">Search 100+ live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.</p>
+    <div class="hero-stats" id="heroStats">
       <div class="hstat"><div class="hstat-num">20+</div><div class="hstat-lbl">Job Portals</div></div>
       <div class="hstat"><div class="hstat-num">100</div><div class="hstat-lbl">Results / Search</div></div>
       <div class="hstat"><div class="hstat-num">🌍</div><div class="hstat-lbl">Global Search</div></div>
@@ -249,8 +250,21 @@ const GW = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
   const isUS = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
                 'America/Phoenix','America/Anchorage','Pacific/Honolulu'].includes(tz);
-  const img = document.querySelector('#heroPanel img');
-  img.src = isUS ? '/hero_us.jpg' : '/hero.jpg';
+
+  // Set image
+  document.querySelector('#heroPanel img').src = isUS ? '/hero_us.jpg' : '/hero.jpg';
+
+  // Set caption
+  if (isUS) {
+    document.getElementById('heroTag').textContent       = '🇺🇸 US Job Market';
+    document.getElementById('heroHeadline').innerHTML    = 'Land your dream job<br/>across <span>America</span>';
+    document.getElementById('heroBody').textContent      = 'Search thousands of US openings on LinkedIn, Indeed, ZipRecruiter, Glassdoor, Dice and more — all in one AI-powered search.';
+    document.getElementById('heroStats').innerHTML       = `
+      <div class="hstat"><div class="hstat-num">20+</div><div class="hstat-lbl">US Job Portals</div></div>
+      <div class="hstat"><div class="hstat-num">100</div><div class="hstat-lbl">Results / Search</div></div>
+      <div class="hstat"><div class="hstat-num">🤖</div><div class="hstat-lbl">AI Enhanced</div></div>`;
+  }
+
   document.getElementById('heroPanel').style.display = 'flex';
   document.body.classList.add('has-hero');
 })();
