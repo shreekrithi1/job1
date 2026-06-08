@@ -165,50 +165,156 @@
     .state-box p { color:var(--muted); max-width:360px; font-size:14px; line-height:1.6; }
 
     /* ── JOB CARDS ── */
-    .jobs-grid { display:flex; flex-direction:column; gap:12px; }
-    .job-card {
-      background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-      padding:18px 20px; transition:border-color .2s, box-shadow .2s, transform .15s;
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .job-card:hover { border-color:rgba(99,102,241,.45); box-shadow:0 8px 28px rgba(0,0,0,.4); transform:translateY(-2px); }
-    .card-top { display:flex; align-items:flex-start; gap:12px; }
-    .favicon { width:44px; height:44px; border-radius:10px; background:var(--surface2); border:1px solid var(--border); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:20px; }
-    .favicon img { width:100%; height:100%; object-fit:contain; border-radius:8px; }
-    .card-meta { flex:1; min-width:0; }
-    .card-num { font-size:10px; color:var(--faint); font-weight:600; }
-    .card-title { font-size:16px; font-weight:700; line-height:1.35; margin-bottom:3px; }
-    .card-sub { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-    .card-sub a { color:var(--accent-h); text-decoration:none; font-size:11px; }
-    .card-sub a:hover { text-decoration:underline; }
+    .jobs-grid { display:flex; flex-direction:column; gap:10px; }
 
-    .badges { display:flex; flex-wrap:wrap; gap:5px; }
-    .badge { display:inline-flex; align-items:center; border-radius:5px; padding:2px 8px; font-size:11px; font-weight:600; }
-    .b-portal { background:rgba(99,102,241,.1);  color:#a5b4fc; border:1px solid rgba(99,102,241,.22); }
-    .b-date   { background:rgba(34,197,94,.08);  color:#86efac; border:1px solid rgba(34,197,94,.18); }
-    .b-dead   { background:rgba(245,158,11,.08); color:#fcd34d; border:1px solid rgba(245,158,11,.22); }
-    .b-type   { background:rgba(34,211,238,.07); color:#67e8f9; border:1px solid rgba(34,211,238,.18); }
-    .b-remote { background:rgba(168,85,247,.09); color:#d8b4fe; border:1px solid rgba(168,85,247,.22); }
-    .b-salary { background:rgba(34,197,94,.08);  color:#86efac; border:1px solid rgba(34,197,94,.18); }
+    .job-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+      transition:border-color .2s, box-shadow .2s, transform .15s;
+      border-left:3px solid transparent;
+    }
+    .job-card:hover {
+      border-color:rgba(99,102,241,.5);
+      border-left-color:var(--accent);
+      box-shadow:0 4px 24px rgba(0,0,0,.35);
+      transform:translateY(-1px);
+    }
+
+    /* ── Card Header ── */
+    .card-header {
+      padding:16px 20px 12px;
+      display:flex; align-items:flex-start; gap:14px;
+    }
+    .company-logo {
+      width:48px; height:48px; border-radius:10px;
+      background:var(--surface2); border:1px solid var(--border);
+      flex-shrink:0; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .company-logo img { width:100%; height:100%; object-fit:contain; }
+    .company-initial {
+      font-size:18px; font-weight:800; color:var(--accent-h);
+      line-height:1;
+    }
+    .card-title-block { flex:1; min-width:0; }
+    .card-top-row {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:8px; margin-bottom:4px;
+    }
+    .card-title {
+      font-size:16px; font-weight:700; color:var(--text);
+      line-height:1.35; text-decoration:none;
+    }
+    .card-title:hover { color:var(--accent-h); }
+    .card-badges-top { display:flex; gap:5px; flex-shrink:0; align-items:center; }
+    .badge-new {
+      background:rgba(34,197,94,.15); border:1px solid rgba(34,197,94,.3);
+      color:#86efac; border-radius:4px; padding:2px 7px;
+      font-size:10px; font-weight:700; letter-spacing:.4px;
+    }
+    .badge-num {
+      background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.2);
+      color:var(--faint); border-radius:4px; padding:2px 7px;
+      font-size:10px; font-weight:600;
+    }
+    .card-company {
+      font-size:13px; font-weight:600; color:var(--muted);
+      margin-bottom:7px;
+    }
+    .card-company span { color:var(--text); }
+
+    /* ── Meta row (location · type · salary · date) ── */
+    .card-meta-row {
+      display:flex; flex-wrap:wrap; align-items:center;
+      gap:4px 14px; font-size:12px; color:var(--faint);
+    }
+    .meta-item { display:flex; align-items:center; gap:4px; }
+    .meta-item svg { flex-shrink:0; opacity:.6; }
+    .meta-dot { color:var(--border); }
+    .tag-remote {
+      background:rgba(168,85,247,.1); border:1px solid rgba(168,85,247,.25);
+      color:#d8b4fe; border-radius:4px; padding:1px 7px;
+      font-size:11px; font-weight:600;
+    }
+    .tag-type {
+      background:rgba(34,211,238,.07); border:1px solid rgba(34,211,238,.2);
+      color:#67e8f9; border-radius:4px; padding:1px 7px;
+      font-size:11px; font-weight:600;
+    }
+
+    /* ── Divider ── */
+    .card-divider { height:1px; background:var(--border); margin:0 20px; opacity:.5; }
+
+    /* ── Card Body ── */
+    .card-body { padding:12px 20px; }
 
     .card-desc {
-      font-size:13px; color:var(--muted); line-height:1.7;
-      border-left:3px solid var(--border); padding-left:12px; margin-top:2px;
+      font-size:13px; color:var(--muted); line-height:1.75;
+      margin-bottom:10px;
     }
-    .card-desc.coll { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-    .btn-exp { background:none; border:none; color:var(--accent-h); font-size:12px; cursor:pointer; padding:0; font-weight:600; }
+    .card-desc.coll {
+      display:-webkit-box; -webkit-line-clamp:3;
+      -webkit-box-orient:vertical; overflow:hidden;
+    }
+    .btn-exp {
+      background:none; border:none; color:var(--accent-h);
+      font-size:12px; cursor:pointer; padding:0;
+      font-weight:600; margin-bottom:10px; display:block;
+    }
 
-    .card-actions { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
-    .btn-apply { background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none; border-radius:8px; padding:8px 18px; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:opacity .15s, transform .1s; }
+    /* ── Skill chips ── */
+    .skill-chips { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+    .skill-chip {
+      background:rgba(255,255,255,.04); border:1px solid var(--border);
+      color:var(--muted); border-radius:5px; padding:3px 9px;
+      font-size:11px; font-weight:500;
+    }
+
+    /* ── Card Footer ── */
+    .card-footer {
+      padding:10px 20px 14px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
+    }
+    .card-actions { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+    .btn-apply {
+      background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff;
+      border:none; border-radius:8px; padding:9px 20px;
+      font-size:13px; font-weight:700; cursor:pointer;
+      text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+      transition:opacity .15s, transform .1s;
+    }
     .btn-apply:hover { opacity:.85; transform:translateY(-1px); }
-    .btn-view { background:var(--surface2); border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:8px 13px; font-size:13px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:4px; transition:all .15s; }
-    .btn-view:hover { background:var(--border); color:var(--text); }
-    .btn-copy { background:none; border:1px solid var(--border); color:var(--faint); border-radius:8px; padding:8px 11px; font-size:12px; cursor:pointer; transition:background .15s; display:inline-flex; align-items:center; gap:4px; }
+    .btn-view {
+      background:transparent; border:1px solid var(--border); color:var(--muted);
+      border-radius:8px; padding:9px 14px; font-size:13px;
+      cursor:pointer; text-decoration:none;
+      display:inline-flex; align-items:center; gap:5px;
+      transition:all .15s;
+    }
+    .btn-view:hover { background:var(--surface2); color:var(--text); border-color:var(--muted); }
+    .btn-copy {
+      background:transparent; border:1px solid var(--border); color:var(--faint);
+      border-radius:8px; padding:9px 11px; font-size:12px;
+      cursor:pointer; display:inline-flex; align-items:center;
+      transition:background .15s;
+    }
     .btn-copy:hover { background:var(--surface2); color:var(--muted); }
+    .card-portal-link {
+      font-size:11px; color:var(--faint); text-decoration:none;
+      display:flex; align-items:center; gap:4px; margin-left:auto;
+    }
+    .card-portal-link:hover { color:var(--accent-h); }
 
-    .load-more-wrap { display:flex; justify-content:center; margin-top:22px; }
-    .btn-loadmore { background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:10px; padding:12px 36px; font-size:14px; font-weight:600; cursor:pointer; transition:background .15s; }
-    .btn-loadmore:hover { background:var(--surface2); color:var(--text); }
+    .load-more-wrap { display:flex; justify-content:center; margin-top:24px; }
+    .btn-loadmore {
+      background:transparent; border:1px solid var(--border); color:var(--muted);
+      border-radius:10px; padding:12px 40px; font-size:14px; font-weight:600;
+      cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:8px;
+    }
+    .btn-loadmore:hover { background:var(--surface); color:var(--text); border-color:var(--accent); }
 
     /* TOAST */
     .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(70px); background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:10px; padding:10px 18px; font-size:13px; z-index:9999; opacity:0; transition:transform .3s, opacity .3s; pointer-events:none; white-space:nowrap; }
@@ -873,45 +979,140 @@ function renderResults() {
 function buildCard(job, i) {
   const el = document.createElement('div');
   el.className = 'job-card';
-  const id = 'desc_' + i;
-  const compLoc = [job.company, job.location].filter(Boolean).join(' · ');
+  const descId = 'desc_' + i;
+
+  // Company initial fallback
+  const initial = (job.company || job.title || '?')[0].toUpperCase();
+
+  // "New" badge if posted within 7 days
+  const isNew = job.postedDate && isRecent(job.postedDate, 7);
+
+  // Meta row items
+  const metaItems = [
+    job.location  ? `<span class="meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(job.location)}</span>` : '',
+    job.salary    ? `<span class="meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>${esc(job.salary)}</span>` : '',
+    job.postedDate ? `<span class="meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${esc(timeAgo(job.postedDate))}</span>` : '',
+  ].filter(Boolean).join('<span class="meta-dot">·</span>');
+
+  // Skills extracted from description
+  const skills = extractSkills(job.description || '').slice(0, 6);
+  const skillsHtml = skills.length
+    ? `<div class="skill-chips">${skills.map(s => `<span class="skill-chip">${esc(s)}</span>`).join('')}</div>`
+    : '';
+
+  // Type + remote tags
+  const typeTags = [
+    job.jobType ? `<span class="tag-type">${esc(job.jobType)}</span>` : '',
+    job.remote  ? `<span class="tag-remote">Remote</span>` : '',
+  ].filter(Boolean).join(' ');
+
+  // Portal source link
   let host = ''; try { host = new URL(job.url).hostname.replace('www.',''); } catch {}
 
-  const badges = [
-    job.portal     ? `<span class="badge b-portal">📌 ${esc(job.portal)}</span>` : '',
-    job.jobType    ? `<span class="badge b-type">${esc(job.jobType)}</span>` : '',
-    job.remote     ? `<span class="badge b-remote">🌍 Remote</span>` : '',
-    job.salary     ? `<span class="badge b-salary">💰 ${esc(job.salary)}</span>` : '',
-    job.postedDate ? `<span class="badge b-date">📅 ${esc(job.postedDate)}</span>` : '',
-    job.deadline   ? `<span class="badge b-dead">⏳ Deadline: ${esc(job.deadline)}</span>` : '',
-  ].filter(Boolean).join('');
-
   el.innerHTML = `
-    <div class="card-top">
-      <div class="favicon">
-        <img src="${esc(job.favicon)}" alt="" loading="lazy" onerror="this.parentElement.textContent='💼'" />
+    <div class="card-header">
+      <div class="company-logo">
+        <img src="${esc(job.favicon)}" alt="" loading="lazy"
+          onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\\'company-initial\\'>${initial}</span>'" />
       </div>
-      <div class="card-meta">
-        <div class="card-num">#${job.idx}</div>
-        <div class="card-title">${esc(job.title)}</div>
-        <div class="card-sub">
-          ${compLoc ? esc(compLoc) + ' &nbsp;·&nbsp; ' : ''}
-          <a href="${esc(job.url)}" target="_blank" rel="noopener">↗ ${esc(host)}</a>
+      <div class="card-title-block">
+        <div class="card-top-row">
+          <a class="card-title" href="${esc(job.url)}" target="_blank" rel="noopener">${esc(job.title)}</a>
+          <div class="card-badges-top">
+            ${isNew ? '<span class="badge-new">NEW</span>' : ''}
+            <span class="badge-num">#${job.idx}</span>
+          </div>
         </div>
+        <div class="card-company">
+          ${job.company ? `<span>${esc(job.company)}</span>` : ''}
+          ${typeTags ? (job.company ? ' &nbsp;·&nbsp; ' : '') + typeTags : ''}
+        </div>
+        <div class="card-meta-row">${metaItems}</div>
       </div>
     </div>
-    ${badges ? `<div class="badges">${badges}</div>` : ''}
-    ${job.description ? `
-      <div class="card-desc coll" id="${id}">${esc(job.description)}</div>
-      <button class="btn-exp" onclick="toggleDesc('${id}',this)">Show more ▾</button>
-    ` : ''}
-    <div class="card-actions">
-      <a class="btn-apply" href="${esc(job.url)}" target="_blank" rel="noopener">✅ Apply Now</a>
-      <a class="btn-view"  href="${esc(job.url)}" target="_blank" rel="noopener">🔗 View</a>
-      <button class="btn-copy" onclick="copyLink('${esc(job.url)}')">📋 Copy</button>
+
+    <div class="card-divider"></div>
+
+    <div class="card-body">
+      ${job.description ? `
+        <div class="card-desc coll" id="${descId}">${formatDesc(job.description)}</div>
+        <button class="btn-exp" onclick="toggleDesc('${descId}',this)">Show more ▾</button>
+      ` : ''}
+      ${skillsHtml}
+    </div>
+
+    <div class="card-footer">
+      <div class="card-actions">
+        <a class="btn-apply" href="${esc(job.url)}" target="_blank" rel="noopener">
+          Apply Now &nbsp;→
+        </a>
+        <a class="btn-view" href="${esc(job.url)}" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View
+        </a>
+        <button class="btn-copy" onclick="copyLink('${esc(job.url)}')" title="Copy link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+      </div>
+      ${host ? `<a class="card-portal-link" href="${esc(job.url)}" target="_blank" rel="noopener">via ${esc(host)}</a>` : ''}
     </div>
   `;
   return el;
+}
+
+// Format description: clean up whitespace, convert line breaks to readable text
+function formatDesc(text) {
+  return esc(text
+    .replace(/\r\n|\r/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+    .slice(0, 1200)
+  ).replace(/\n\n/g, '</p><p style="margin-top:8px">').replace(/\n/g, '<br>');
+}
+
+// Extract common tech/professional skills from description text
+function extractSkills(text) {
+  const SKILLS = [
+    'Python','JavaScript','TypeScript','Java','C++','C#','Go','Rust','PHP','Ruby','Swift','Kotlin','Scala',
+    'React','Angular','Vue','Node.js','Django','Flask','Spring','Laravel','Rails',
+    'AWS','Azure','GCP','Docker','Kubernetes','Terraform','CI/CD','Git','Linux',
+    'SQL','PostgreSQL','MySQL','MongoDB','Redis','Elasticsearch','GraphQL','REST','API',
+    'Machine Learning','Deep Learning','NLP','TensorFlow','PyTorch','Spark','Hadoop',
+    'Agile','Scrum','Jira','Figma','Tableau','Power BI','Excel','Salesforce',
+    'HTML','CSS','Webpack','Microservices','DevOps','Cloud','Cybersecurity',
+    'Project Management','Data Analysis','Product Management','UX','UI',
+  ];
+  const found = new Set();
+  const lower = text.toLowerCase();
+  for (const skill of SKILLS) {
+    if (lower.includes(skill.toLowerCase())) found.add(skill);
+    if (found.size >= 8) break;
+  }
+  return [...found];
+}
+
+// Format date as "2 days ago", "3 weeks ago", etc.
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  if (/ago/i.test(dateStr)) return dateStr; // already formatted
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  const days = Math.floor((Date.now() - d) / 86400000);
+  if (days < 1)  return 'Today';
+  if (days === 1) return '1 day ago';
+  if (days < 7)  return `${days} days ago`;
+  if (days < 14) return '1 week ago';
+  if (days < 30) return `${Math.floor(days/7)} weeks ago`;
+  if (days < 60) return '1 month ago';
+  return `${Math.floor(days/30)} months ago`;
+}
+
+// Check if a date is within N days
+function isRecent(dateStr, days) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr);
+  if (isNaN(d)) return false;
+  return (Date.now() - d) < days * 86400000;
 }
 
 function toggleDesc(id, btn) {
