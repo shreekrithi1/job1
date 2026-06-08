@@ -214,17 +214,82 @@
     .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(70px); background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:10px; padding:10px 18px; font-size:13px; z-index:9999; opacity:0; transition:transform .3s, opacity .3s; pointer-events:none; white-space:nowrap; }
     .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
 
-    /* RESPONSIVE */
-    @media(max-width:780px) {
+    /* ── RESPONSIVE ── */
+
+    /* Date row — keep in CSS so media queries can override */
+    .date-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+
+    /* Tablet — 600–820px */
+    @media(max-width:820px) {
+      main { padding:16px 12px 80px; }
+      .search-card { padding:16px; }
       .filters-grid { grid-template-columns:1fr 1fr; }
-      .kw-row { flex-direction:column; }
-      .btn-search { padding:13px; }
-      nav { padding:0 12px; gap:8px; }
       .nav-user { display:none; }
+      .quota-pill { font-size:11px; padding:4px 9px; }
     }
+
+    /* Large phone — 480–600px */
+    @media(max-width:600px) {
+      nav { padding:0 10px; gap:6px; height:52px; }
+      .nav-logo { font-size:16px; }
+      .btn-sm { padding:5px 9px; font-size:11px; }
+
+      .kw-row { flex-direction:column; }
+      .btn-search { width:100%; padding:14px; justify-content:center; font-size:15px; }
+
+      .filters-grid { grid-template-columns:1fr 1fr; }
+      .date-row { grid-template-columns:1fr 1fr; }
+
+      .bottom-row { flex-direction:column; align-items:flex-start; gap:10px; }
+      .btn-clear { align-self:flex-end; }
+
+      .results-bar { gap:6px; }
+      .sort-sel { flex:1; min-width:0; }
+      .btn-excel { font-size:12px; padding:6px 10px; }
+
+      .chip { font-size:11px; padding:4px 10px; }
+
+      /* Portal section toggle on mobile */
+      .portals-toggle { display:flex; }
+      .portals-body { display:none; }
+      .portals-body.open { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+    }
+
+    /* Small phone — ≤480px */
     @media(max-width:480px) {
+      nav { height:50px; }
+      .quota-pill { display:none; }
+
       .filters-grid { grid-template-columns:1fr; }
-      .job-card { padding:14px; }
+      .date-row { grid-template-columns:1fr; }
+
+      .search-card { padding:14px; border-radius:10px; }
+      .kw-input { font-size:15px; padding:12px 12px 12px 40px; }
+
+      .job-card { padding:12px; }
+      .card-title { font-size:15px; }
+      .favicon { width:38px; height:38px; }
+
+      .card-actions { gap:6px; }
+      .btn-apply, .btn-view, .btn-copy { padding:9px 12px; font-size:12px; }
+      .btn-apply { flex:1; justify-content:center; }
+
+      .badges { gap:4px; }
+      .badge { font-size:10px; padding:2px 7px; }
+
+      .btn-loadmore { padding:12px 24px; font-size:13px; }
+      .results-bar { flex-wrap:wrap; }
+      .sort-sel, .btn-excel { font-size:12px; }
+
+      .toggle-lbl span { display:none; } /* hide subtitle on tiny screens */
+    }
+
+    /* Touch: min tap target 44px for interactive elements */
+    @media(hover:none) and (pointer:coarse) {
+      .chip { min-height:36px; padding:7px 13px; }
+      .btn-sm { min-height:36px; }
+      .field input, .field select { min-height:44px; }
+      .btn-apply, .btn-view, .btn-copy, .btn-clear, .btn-loadmore, .btn-search { min-height:44px; }
     }
   </style>
 </head>
@@ -354,7 +419,7 @@
   </div>
 
   <!-- Date row -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+  <div class="date-row">
     <div class="field">
       <label>Posted After</label>
       <input type="date" id="fromDate" />
@@ -366,11 +431,13 @@
   </div>
 
   <!-- Portals -->
-  <div class="sec-label">Job Portals <span style="color:var(--accent-h);margin-left:4px" id="portalCount"></span>
+  <div class="sec-label">
+    Job Portals <span style="color:var(--accent-h);margin-left:4px" id="portalCount"></span>
     &nbsp;<button class="chip-all" onclick="selectAllPortals()">All</button>
     <button class="chip-none" onclick="selectNoPortals()">None</button>
+    <button class="chip-none portals-toggle" id="portalsToggleBtn" onclick="togglePortals()" style="display:none">▼ Show</button>
   </div>
-  <div class="portals-scroll" id="portalsWrap"></div>
+  <div class="portals-scroll portals-body" id="portalsWrap"></div>
 
   <!-- Bottom row -->
   <div class="bottom-row">
@@ -533,7 +600,29 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); })
   );
   initPTR();
+  initMobilePortals();
 });
+
+function initMobilePortals() {
+  const btn = document.getElementById('portalsToggleBtn');
+  const body = document.getElementById('portalsWrap');
+  function checkMobile() {
+    const mobile = window.innerWidth <= 600;
+    btn.style.display = mobile ? 'inline-flex' : 'none';
+    if (!mobile) { body.classList.add('open'); body.style.display = ''; }
+    else if (!body.classList.contains('open')) body.style.display = 'none';
+  }
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+}
+
+function togglePortals() {
+  const body = document.getElementById('portalsWrap');
+  const btn  = document.getElementById('portalsToggleBtn');
+  const open = body.classList.toggle('open');
+  body.style.display = open ? '' : 'none';
+  btn.textContent = open ? '▲ Hide' : '▼ Show';
+}
 
 function fmtDate(d) { return d.toISOString().slice(0, 10); }
 
