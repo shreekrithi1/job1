@@ -6,9 +6,17 @@ let initialized = false;
 
 function getPool() {
   if (!pool) {
-    // Strip ?sslmode=... from URL — pg handles SSL via the ssl option directly
-    const connStr = (process.env.POSTGRES_URL || '').replace(/[?&]sslmode=[^&]*/g, '');
-    const isLocal = connStr.includes('localhost') || connStr.includes('127.0.0.1');
+    const raw = process.env.POSTGRES_URL || '';
+    const isLocal = raw.includes('localhost') || raw.includes('127.0.0.1');
+
+    // Remove sslmode from query string so pg doesn't conflict with our ssl option
+    let connStr = raw;
+    try {
+      const u = new URL(raw);
+      u.searchParams.delete('sslmode');
+      connStr = u.toString();
+    } catch (_) { /* leave as-is if URL parse fails */ }
+
     pool = new Pool({
       connectionString: connStr,
       ssl: isLocal ? false : { rejectUnauthorized: false },
