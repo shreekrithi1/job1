@@ -244,17 +244,15 @@
 <script>
 const GW = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
 
-// ── Show hero for non-US visitors ──
+// ── Show hero image — hero_us.jpg for US, hero.jpg for everyone else ──
 (function() {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-  const lang = navigator.language || navigator.userLanguage || '';
-  const isUS = tz.startsWith('America/') &&
-    ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
-     'America/Phoenix','America/Anchorage','Pacific/Honolulu'].includes(tz);
-  if (!isUS) {
-    document.getElementById('heroPanel').style.display = 'flex';
-    document.body.classList.add('has-hero');
-  }
+  const isUS = ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+                'America/Phoenix','America/Anchorage','Pacific/Honolulu'].includes(tz);
+  const img = document.querySelector('#heroPanel img');
+  img.src = isUS ? '/hero_us.jpg' : '/hero.jpg';
+  document.getElementById('heroPanel').style.display = 'flex';
+  document.body.classList.add('has-hero');
 })();
 
 // Redirect if already logged in
