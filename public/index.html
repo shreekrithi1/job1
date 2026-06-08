@@ -238,28 +238,133 @@
   #ptr.active, #ptr.refreshing { height:48px; }
 
   /* ═══ RESPONSIVE ═══ */
+
+  /* ── 1100px: narrow list ── */
   @media(max-width:1100px) {
     .jobs-list { width:360px; }
   }
+
+  /* ── 900px: tablet — single panel, detail as overlay ── */
   @media(max-width:900px) {
     .sidebar { width:260px; }
     .jobs-list { width:100%; border-right:none; }
     .job-detail { display:none; }
-    .job-detail.show { display:block; position:fixed; inset:56px 0 0; z-index:150; overflow-y:auto; background:var(--bg); }
+    .job-detail.show {
+      display:flex; flex-direction:column;
+      position:fixed; inset:0; z-index:150;
+      overflow-y:auto; background:var(--bg);
+    }
+    .job-detail.show .dp-back { display:flex; }
   }
+
+  /* ── 700px: mobile — sidebar becomes full-screen sheet ── */
   @media(max-width:700px) {
-    .sidebar { display:none; }
-    .sidebar.open { display:flex; flex-direction:column; position:fixed; inset:56px 0 0 0; z-index:160; overflow-y:auto; width:100%; border-right:none; }
+    /* Make layout scrollable (not viewport-locked) on mobile */
+    .layout { height:auto; overflow:visible; }
+    .main-content { height:auto; overflow:visible; }
+    .results-body { overflow:visible; min-height:0; flex-direction:column; }
+    .jobs-list { width:100%; height:auto; overflow:visible; overflow-y:visible; }
+
+    /* Sidebar: hidden, opens as full-screen sheet */
+    .sidebar { display:none; position:static; height:auto; }
+    .sidebar.open {
+      display:flex; flex-direction:column;
+      position:fixed; inset:0; z-index:170;
+      overflow-y:auto; width:100%; border-right:none;
+      background:var(--panel);
+    }
+    .sidebar-close { display:flex !important; }
+
+    /* Nav */
     .nav-search-wrap { display:none; }
+    .nav-btn { display:none; }
+    .quota-pill { display:none; }
     .mob-filter-btn { display:flex; }
+    .mob-signout { display:flex !important; }
+
+    /* Touch-friendly inputs */
+    .kw-input, .filter-input, .filter-select, .btn-search { min-height:44px; font-size:15px; }
+    .portal-chip { padding:7px 11px; font-size:12px; }
+    .job-card { padding:14px 14px; }
+    .jc-title { font-size:15px; }
+
+    /* Mobile search strip at top of list */
+    .mob-search-strip { display:flex !important; }
   }
+
   @media(min-width:701px) {
     .mob-filter-btn { display:none !important; }
+    .mob-signout { display:none !important; }
+    .mob-search-strip { display:none !important; }
+    .sidebar-close { display:none !important; }
+    .dp-back { display:none !important; }
   }
+
+  /* ── 480px: small phones ── */
+  @media(max-width:480px) {
+    .topnav { padding:0 12px; gap:8px; }
+    .nav-logo { font-size:16px; }
+    .nav-avatar { width:30px; height:30px; font-size:12px; }
+    .results-header { padding:10px 12px; gap:6px; }
+    .sort-sel, .btn-excel { display:none; }
+    .results-count { font-size:13px; }
+    .btn-excel-sm { display:flex !important; }
+    .dp-title { font-size:18px; }
+    .dp-apply { padding:11px 20px; font-size:14px; }
+    .detail-panel { padding:16px; }
+  }
+  @media(min-width:481px) { .btn-excel-sm { display:none !important; } }
+
+  /* Touch: larger tap targets */
+  @media(hover:none) and (pointer:coarse) {
+    .job-card { padding:16px 14px; }
+    .portal-chip { min-height:36px; display:flex; align-items:center; }
+    .btn-search, .dp-apply, .btn-loadmore { min-height:48px; }
+  }
+
+  /* ── Shared mobile/tablet elements (always defined) ── */
   .mob-filter-btn {
     background:var(--panel); border:1px solid var(--border); color:var(--sub);
-    border-radius:7px; padding:6px 12px; font-size:12px; cursor:pointer;
+    border-radius:7px; padding:7px 13px; font-size:13px; cursor:pointer;
+    align-items:center; gap:5px; font-weight:600; white-space:nowrap;
+  }
+  .mob-signout {
+    background:transparent; border:1px solid var(--border); color:var(--sub);
+    border-radius:7px; padding:7px 13px; font-size:13px; cursor:pointer;
     align-items:center; gap:5px; font-weight:600;
+  }
+  .sidebar-close {
+    display:none; align-items:center; justify-content:space-between;
+    padding:14px 16px 0; flex-shrink:0;
+    font-size:15px; font-weight:700; color:var(--text);
+  }
+  .sidebar-close-btn {
+    background:var(--card); border:1px solid var(--border); color:var(--sub);
+    border-radius:7px; padding:6px 14px; font-size:13px; cursor:pointer;
+  }
+  /* Back button in detail panel */
+  .dp-back {
+    display:none; align-items:center; gap:8px;
+    padding:14px 16px; border-bottom:1px solid var(--border);
+    color:var(--accent-h); font-size:14px; font-weight:600; cursor:pointer;
+    background:var(--panel); position:sticky; top:0; z-index:10; flex-shrink:0;
+  }
+  .dp-back svg { flex-shrink:0; }
+  /* Mobile search strip (shown above results on ≤700px) */
+  .mob-search-strip {
+    display:none; padding:12px 14px; gap:8px; border-bottom:1px solid var(--border);
+    background:var(--panel); flex-shrink:0;
+  }
+  .mob-search-strip input {
+    flex:1; background:var(--bg); border:1.5px solid var(--border); color:var(--text);
+    border-radius:9px; padding:10px 14px; font-size:15px; min-height:44px;
+  }
+  .mob-search-strip input:focus { outline:none; border-color:var(--accent); }
+  .mob-search-strip input::placeholder { color:var(--faint); }
+  .mob-search-btn {
+    background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none;
+    border-radius:9px; padding:10px 18px; font-size:14px; font-weight:700;
+    cursor:pointer; white-space:nowrap; min-height:44px;
   }
   </style>
 </head>
@@ -283,6 +388,9 @@
     <div class="nav-avatar" id="navAvatar">?</div>
     <a class="nav-btn" id="adminLink" href="/admin.html" style="display:none">⚙ Admin</a>
     <button class="nav-btn" onclick="logout()">Sign out</button>
+    <button class="mob-signout" onclick="logout()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
   </div>
 </nav>
 
@@ -291,6 +399,11 @@
 
   <!-- LEFT SIDEBAR: SEARCH + FILTERS -->
   <aside class="sidebar" id="sidebar">
+    <!-- Mobile close bar -->
+    <div class="sidebar-close">
+      <span>Filters</span>
+      <button class="sidebar-close-btn" onclick="toggleSidebar()">✕ Close</button>
+    </div>
     <div class="sidebar-inner">
 
       <!-- Keyword + Search -->
@@ -442,6 +555,12 @@
     <!-- Two-panel body -->
     <div class="results-body">
 
+      <!-- Mobile search strip -->
+      <div class="mob-search-strip" id="mobSearchStrip">
+        <input id="mobKwInput" type="text" placeholder="Job title, skills, keywords…" />
+        <button class="mob-search-btn" onclick="syncMobSearch();doSearch()">Search</button>
+      </div>
+
       <!-- Job list -->
       <div class="jobs-list" id="jobsList">
         <!-- Empty state -->
@@ -481,6 +600,11 @@
 
       <!-- Job detail -->
       <div class="job-detail" id="jobDetail">
+        <!-- Back button (mobile/tablet) -->
+        <div class="dp-back" id="dpBack" onclick="closeDetail()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to results
+        </div>
         <div class="detail-empty" id="detailEmpty">
           <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           <h3>Select a job</h3>
@@ -575,21 +699,35 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('toDate').value   = fmtDate(today);
   document.getElementById('fromDate').value = fmtDate(past);
   const go = e => { if(e.key==='Enter') doSearch(); };
-  ['kwInput','locInput','navSearch'].forEach(id => {
+  ['kwInput','locInput','navSearch','mobKwInput'].forEach(id => {
     const el=document.getElementById(id);
     if(el) el.addEventListener('keydown',go);
   });
-  // Sync nav search with sidebar keyword
-  document.getElementById('navSearch').addEventListener('input',e=>{
-    document.getElementById('kwInput').value = e.target.value;
-  });
-  document.getElementById('kwInput').addEventListener('input',e=>{
-    document.getElementById('navSearch').value = e.target.value;
-  });
+  // Sync all keyword inputs
+  const syncKw = (src,targets) => {
+    document.getElementById(src)?.addEventListener('input',e=>{
+      targets.forEach(id=>{ const t=document.getElementById(id); if(t) t.value=e.target.value; });
+    });
+  };
+  syncKw('navSearch',['kwInput','mobKwInput']);
+  syncKw('kwInput',['navSearch','mobKwInput']);
+  syncKw('mobKwInput',['kwInput','navSearch']);
   initPTR();
 });
 function fmtDate(d){ return d.toISOString().slice(0,10); }
-function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  s.classList.toggle('open');
+  document.body.style.overflow=s.classList.contains('open')?'hidden':'';
+}
+function closeDetail(){
+  document.getElementById('jobDetail').classList.remove('show');
+  document.querySelectorAll('.job-card.active').forEach(el=>el.classList.remove('active'));
+}
+function syncMobSearch(){
+  const v=document.getElementById('mobKwInput').value.trim();
+  if(v){ document.getElementById('kwInput').value=v; document.getElementById('navSearch').value=v; }
+}
 
 // ═══════════════════════════════════════════
 // PORTALS
@@ -646,6 +784,10 @@ async function doSearch(){
     allResults=cached; displayedCount=PAGE_SIZE; fromCache=true; wasEnhanced=false;
     renderResults(); updateQuotaUI(); showToast('⚡ Results from cache'); return;
   }
+
+  // Close sidebar on mobile when search fires
+  const _sb=document.getElementById('sidebar');
+  if(_sb.classList.contains('open')){ _sb.classList.remove('open'); document.body.style.overflow=''; }
 
   // Show loading
   fromCache=false; showLoading(true);
@@ -912,8 +1054,12 @@ function selectJob(i){
     </div>
     ${job.description?`<div class="dp-section-title">Job Description</div><div class="dp-desc">${formatDesc(job.description)}</div>`:''}
     ${skillsHtml}`;
-  // On mobile, show the detail panel overlay
-  if(window.innerWidth<=900) document.getElementById('jobDetail').classList.add('show');
+  // On mobile/tablet show detail panel overlay; close sidebar if open
+  if(window.innerWidth<=900){
+    document.getElementById('jobDetail').classList.add('show');
+    const s=document.getElementById('sidebar');
+    if(s.classList.contains('open')){ s.classList.remove('open'); document.body.style.overflow=''; }
+  }
 }
 
 function clearDetail(){
