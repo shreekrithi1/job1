@@ -14,13 +14,69 @@
     body {
       font-family: system-ui,-apple-system,sans-serif;
       background:var(--bg); color:var(--text); min-height:100vh;
-      display:flex; align-items:center; justify-content:center;
-      background-image:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,.18) 0%,transparent 70%);
+      display:flex; align-items:stretch;
     }
+
+    /* ── HERO PANEL (non-US only) ── */
+    .hero-panel {
+      display:none; /* shown via JS for non-US */
+      flex:1; position:relative; overflow:hidden;
+      background:#071120; min-height:100vh;
+    }
+    .hero-panel img {
+      width:100%; height:100%; object-fit:cover; object-position:center 20%;
+      display:block;
+    }
+    /* gradient overlays: fade right into form bg, darken bottom for caption */
+    .hero-overlay {
+      position:absolute; inset:0; pointer-events:none;
+      background:
+        linear-gradient(to right, rgba(7,17,32,0) 50%, #0f172a 100%),
+        linear-gradient(to top,   rgba(7,17,32,.85) 0%, transparent 50%);
+    }
+    .hero-caption {
+      position:absolute; bottom:0; left:0; right:0; padding:36px 32px;
+    }
+    .hero-tag {
+      display:inline-flex; align-items:center; gap:7px;
+      background:rgba(99,102,241,.22); border:1px solid rgba(99,102,241,.45);
+      color:#a5b4fc; border-radius:24px; padding:5px 15px;
+      font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+      margin-bottom:14px;
+    }
+    .hero-tag::before { content:'✦'; }
+    .hero-caption h2 {
+      font-size:24px; font-weight:800; color:#fff; line-height:1.35; margin-bottom:10px;
+    }
+    .hero-caption h2 span {
+      background:linear-gradient(135deg,#a5b4fc,#22d3ee);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-caption p {
+      font-size:14px; color:rgba(255,255,255,.6); line-height:1.7; max-width:320px;
+    }
+    .hero-stats {
+      display:flex; gap:24px; margin-top:20px; flex-wrap:wrap;
+    }
+    .hstat { display:flex; flex-direction:column; gap:2px; }
+    .hstat-num { font-size:20px; font-weight:800; color:#fff; }
+    .hstat-lbl { font-size:11px; color:rgba(255,255,255,.5); }
+
+    /* ── FORM SIDE ── */
+    .form-side {
+      display:flex; align-items:center; justify-content:center;
+      padding:24px; min-height:100vh;
+      background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,.15) 0%,transparent 70%);
+      flex:0 0 auto; width:100%;
+    }
+    body.has-hero .form-side {
+      width:460px; flex:0 0 460px; background:var(--bg);
+    }
+
     .card {
       background:var(--surface); border:1px solid var(--border);
-      border-radius:16px; padding:40px; width:100%; max-width:460px;
-      box-shadow:0 20px 60px rgba(0,0,0,.5); margin:20px;
+      border-radius:16px; padding:40px; width:100%; max-width:420px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
     }
     .logo { text-align:center; margin-bottom:28px; }
     .logo h1 {
@@ -49,7 +105,7 @@
     .field input:focus, .field select:focus { outline:none; border-color:var(--accent); }
     .field input::placeholder { color:var(--faint); }
     .phone-row { display:flex; gap:8px; }
-    .phone-row select { width:140px; flex-shrink:0; }
+    .phone-row select { width:135px; flex-shrink:0; }
     .phone-row input { flex:1; }
     .err { color:var(--red); font-size:12px; display:none; }
     .err.show { display:block; }
@@ -68,100 +124,138 @@
     .strength-bar { height:100%; border-radius:2px; transition:width .3s, background .3s; width:0; }
     select option { background:#1e293b; }
     .hint { font-size:11px; color:var(--faint); margin-top:2px; }
+
+    @media(max-width:860px) {
+      .hero-panel { display:none !important; }
+      body.has-hero .form-side { width:100%; flex:1; background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,.15) 0%,transparent 70%); }
+    }
   </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">
-    <h1>🔍 JobFinder AI</h1>
-    <p>AI-powered job search across 13+ portals</p>
+
+<!-- HERO PANEL — shown for non-US visitors -->
+<div class="hero-panel" id="heroPanel">
+  <img src="/hero.jpg" alt="Young professional searching for jobs" />
+  <div class="hero-overlay"></div>
+  <div class="hero-caption">
+    <div class="hero-tag">Global Opportunities</div>
+    <h2>Your next career move<br/>starts <span>right here</span></h2>
+    <p>Search 100+ live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">20+</div><div class="hstat-lbl">Job Portals</div></div>
+      <div class="hstat"><div class="hstat-num">100</div><div class="hstat-lbl">Results / Search</div></div>
+      <div class="hstat"><div class="hstat-num">🌍</div><div class="hstat-lbl">Global Search</div></div>
+    </div>
   </div>
+</div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('login')">Sign In</button>
-    <button class="tab" onclick="switchTab('register')">Create Account</button>
+<!-- FORM SIDE -->
+<div class="form-side">
+  <div class="card">
+    <div class="logo">
+      <h1>🔍 JobFinder AI</h1>
+      <p>AI-powered job search across 20+ portals</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <div id="msgBox" class="msg"></div>
+
+    <!-- LOGIN -->
+    <form class="form active" id="loginForm" onsubmit="doLogin(event)">
+      <div class="field">
+        <label>Email or Username</label>
+        <input type="text" id="lEmail" placeholder="you@example.com or admin" required autocomplete="username" />
+        <span class="hint">Use "admin" for admin access</span>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="lPass" placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+      <span class="err" id="loginErr">Invalid email or password.</span>
+      <button class="btn" type="submit" id="loginBtn">Sign In</button>
+      <div class="divider">New here? <a href="#" onclick="switchTab('register')" style="color:var(--accent-h)">Create account</a></div>
+    </form>
+
+    <!-- REGISTER -->
+    <form class="form" id="registerForm" onsubmit="doRegister(event)">
+      <div class="row2">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" id="rFirst" placeholder="John" required />
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" id="rLast" placeholder="Doe" required />
+        </div>
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <div class="phone-row">
+          <select id="rCC">
+            <option value="+1">🇺🇸 +1</option><option value="+1-CA">🇨🇦 +1</option>
+            <option value="+44">🇬🇧 +44</option><option value="+91">🇮🇳 +91</option>
+            <option value="+61">🇦🇺 +61</option><option value="+64">🇳🇿 +64</option>
+            <option value="+65">🇸🇬 +65</option><option value="+60">🇲🇾 +60</option>
+            <option value="+63">🇵🇭 +63</option><option value="+62">🇮🇩 +62</option>
+            <option value="+66">🇹🇭 +66</option><option value="+84">🇻🇳 +84</option>
+            <option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option>
+            <option value="+82">🇰🇷 +82</option><option value="+92">🇵🇰 +92</option>
+            <option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option>
+            <option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option>
+            <option value="+974">🇶🇦 +974</option><option value="+965">🇰🇼 +965</option>
+            <option value="+972">🇮🇱 +972</option><option value="+90">🇹🇷 +90</option>
+            <option value="+20">🇪🇬 +20</option><option value="+27">🇿🇦 +27</option>
+            <option value="+234">🇳🇬 +234</option><option value="+254">🇰🇪 +254</option>
+            <option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option>
+            <option value="+39">🇮🇹 +39</option><option value="+34">🇪🇸 +34</option>
+            <option value="+31">🇳🇱 +31</option><option value="+46">🇸🇪 +46</option>
+            <option value="+47">🇳🇴 +47</option><option value="+41">🇨🇭 +41</option>
+            <option value="+7">🇷🇺 +7</option><option value="+55">🇧🇷 +55</option>
+            <option value="+52">🇲🇽 +52</option><option value="+54">🇦🇷 +54</option>
+            <option value="+57">🇨🇴 +57</option>
+          </select>
+          <input type="tel" id="rPhone" placeholder="555-123-4567" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="rEmail" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="rPass" placeholder="Min 8 characters" required oninput="checkStrength(this.value)" />
+        <div class="strength"><div class="strength-bar" id="sBar"></div></div>
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" id="rPass2" placeholder="Repeat password" required />
+      </div>
+      <span class="err" id="regErr"></span>
+      <button class="btn" type="submit" id="regBtn">Create Account</button>
+      <div class="divider">Have an account? <a href="#" onclick="switchTab('login')" style="color:var(--accent-h)">Sign in</a></div>
+    </form>
   </div>
-
-  <div id="msgBox" class="msg"></div>
-
-  <!-- LOGIN -->
-  <form class="form active" id="loginForm" onsubmit="doLogin(event)">
-    <div class="field">
-      <label>Email or Username</label>
-      <input type="text" id="lEmail" placeholder="you@example.com or admin" required autocomplete="username" />
-      <span class="hint">Use "admin" for admin access</span>
-    </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="lPass" placeholder="••••••••" required autocomplete="current-password" />
-    </div>
-    <span class="err" id="loginErr">Invalid email or password.</span>
-    <button class="btn" type="submit" id="loginBtn">Sign In</button>
-    <div class="divider">New here? <a href="#" onclick="switchTab('register')" style="color:var(--accent-h)">Create account</a></div>
-  </form>
-
-  <!-- REGISTER -->
-  <form class="form" id="registerForm" onsubmit="doRegister(event)">
-    <div class="row2">
-      <div class="field">
-        <label>First Name</label>
-        <input type="text" id="rFirst" placeholder="John" required />
-      </div>
-      <div class="field">
-        <label>Last Name</label>
-        <input type="text" id="rLast" placeholder="Doe" required />
-      </div>
-    </div>
-    <div class="field">
-      <label>Phone Number</label>
-      <div class="phone-row">
-        <select id="rCC">
-          <option value="+1">🇺🇸 +1</option><option value="+1-CA">🇨🇦 +1</option>
-          <option value="+44">🇬🇧 +44</option><option value="+91">🇮🇳 +91</option>
-          <option value="+61">🇦🇺 +61</option><option value="+64">🇳🇿 +64</option>
-          <option value="+65">🇸🇬 +65</option><option value="+60">🇲🇾 +60</option>
-          <option value="+63">🇵🇭 +63</option><option value="+62">🇮🇩 +62</option>
-          <option value="+66">🇹🇭 +66</option><option value="+84">🇻🇳 +84</option>
-          <option value="+86">🇨🇳 +86</option><option value="+81">🇯🇵 +81</option>
-          <option value="+82">🇰🇷 +82</option><option value="+92">🇵🇰 +92</option>
-          <option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option>
-          <option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option>
-          <option value="+974">🇶🇦 +974</option><option value="+965">🇰🇼 +965</option>
-          <option value="+972">🇮🇱 +972</option><option value="+90">🇹🇷 +90</option>
-          <option value="+20">🇪🇬 +20</option><option value="+27">🇿🇦 +27</option>
-          <option value="+234">🇳🇬 +234</option><option value="+254">🇰🇪 +254</option>
-          <option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option>
-          <option value="+39">🇮🇹 +39</option><option value="+34">🇪🇸 +34</option>
-          <option value="+31">🇳🇱 +31</option><option value="+46">🇸🇪 +46</option>
-          <option value="+47">🇳🇴 +47</option><option value="+41">🇨🇭 +41</option>
-          <option value="+7">🇷🇺 +7</option><option value="+55">🇧🇷 +55</option>
-          <option value="+52">🇲🇽 +52</option><option value="+54">🇦🇷 +54</option>
-          <option value="+57">🇨🇴 +57</option>
-        </select>
-        <input type="tel" id="rPhone" placeholder="555-123-4567" />
-      </div>
-    </div>
-    <div class="field">
-      <label>Email Address</label>
-      <input type="email" id="rEmail" placeholder="you@example.com" required autocomplete="email" />
-    </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="rPass" placeholder="Min 8 characters" required oninput="checkStrength(this.value)" />
-      <div class="strength"><div class="strength-bar" id="sBar"></div></div>
-    </div>
-    <div class="field">
-      <label>Confirm Password</label>
-      <input type="password" id="rPass2" placeholder="Repeat password" required />
-    </div>
-    <span class="err" id="regErr"></span>
-    <button class="btn" type="submit" id="regBtn">Create Account</button>
-    <div class="divider">Have an account? <a href="#" onclick="switchTab('login')" style="color:var(--accent-h)">Sign in</a></div>
-  </form>
 </div>
 
 <script>
 const GW = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
+
+// ── Show hero for non-US visitors ──
+(function() {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  const lang = navigator.language || navigator.userLanguage || '';
+  const isUS = tz.startsWith('America/') &&
+    ['America/New_York','America/Chicago','America/Denver','America/Los_Angeles',
+     'America/Phoenix','America/Anchorage','Pacific/Honolulu'].includes(tz);
+  if (!isUS) {
+    document.getElementById('heroPanel').style.display = 'flex';
+    document.body.classList.add('has-hero');
+  }
+})();
 
 // Redirect if already logged in
 try {
@@ -191,22 +285,19 @@ async function doLogin(e) {
   const errEl = document.getElementById('loginErr');
   errEl.classList.remove('show');
   btn.disabled = true; btn.textContent = 'Signing in…';
-
   try {
     const resp = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-gateway-token': GW },
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-gateway-token':GW},
       body: JSON.stringify({ email, password: pass })
     });
     const data = await resp.json();
     if (!resp.ok) { errEl.textContent = data.error || 'Login failed'; errEl.classList.add('show'); return; }
-
-    localStorage.setItem('jf_token_data', JSON.stringify({ token: data.token, name: data.name, email: data.email, isAdmin: data.isAdmin, ts: Date.now() }));
+    localStorage.setItem('jf_token_data', JSON.stringify({ token:data.token, name:data.name, email:data.email, isAdmin:data.isAdmin, ts:Date.now() }));
     showMsg('success', `Welcome back, ${data.name}! Redirecting…`);
     setTimeout(() => { window.location.href = data.isAdmin ? '/admin.html' : '/'; }, 700);
-  } catch (err) {
-    errEl.textContent = 'Network error. Please try again.';
-    errEl.classList.add('show');
+  } catch {
+    errEl.textContent = 'Network error. Please try again.'; errEl.classList.add('show');
   } finally {
     btn.disabled = false; btn.textContent = 'Sign In';
   }
@@ -224,27 +315,22 @@ async function doRegister(e) {
   const btn         = document.getElementById('regBtn');
   const errEl       = document.getElementById('regErr');
   errEl.classList.remove('show');
-
   if (pass !== pass2)  { errEl.textContent = 'Passwords do not match.'; errEl.classList.add('show'); return; }
   if (pass.length < 8) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.classList.add('show'); return; }
-
   btn.disabled = true; btn.textContent = 'Creating account…';
-
   try {
     const resp = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-gateway-token': GW },
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-gateway-token':GW},
       body: JSON.stringify({ firstName, lastName, email, password: pass, countryCode, phone })
     });
     const data = await resp.json();
     if (!resp.ok) { errEl.textContent = data.error || 'Registration failed'; errEl.classList.add('show'); return; }
-
-    localStorage.setItem('jf_token_data', JSON.stringify({ token: data.token, name: data.name, email: data.email, isAdmin: data.isAdmin, ts: Date.now() }));
+    localStorage.setItem('jf_token_data', JSON.stringify({ token:data.token, name:data.name, email:data.email, isAdmin:data.isAdmin, ts:Date.now() }));
     showMsg('success', `Account created! Welcome, ${firstName}! Redirecting…`);
     setTimeout(() => { window.location.href = '/'; }, 800);
-  } catch (err) {
-    errEl.textContent = 'Network error. Please try again.';
-    errEl.classList.add('show');
+  } catch {
+    errEl.textContent = 'Network error. Please try again.'; errEl.classList.add('show');
   } finally {
     btn.disabled = false; btn.textContent = 'Create Account';
   }
