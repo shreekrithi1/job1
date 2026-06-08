@@ -57,7 +57,7 @@
   .nav-btn:hover { background:var(--panel); color:var(--text); }
 
   /* ═══ LAYOUT ═══ */
-  .layout { display:flex; min-height:calc(100vh - 56px); }
+  .layout { display:flex; height:calc(100vh - 56px); overflow:hidden; }
 
   /* Left sidebar */
   .sidebar {
@@ -114,13 +114,13 @@
   .btn-clear-all:hover { border-color:var(--sub); color:var(--sub); }
 
   /* ═══ MAIN CONTENT ═══ */
-  .main-content { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .main-content { flex:1; min-width:0; display:flex; flex-direction:column; height:100%; overflow:hidden; }
 
   /* Results header bar */
   .results-header {
     padding:14px 20px; border-bottom:1px solid var(--border);
     display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    background:var(--panel); position:sticky; top:56px; z-index:100;
+    background:var(--panel); flex-shrink:0;
   }
   .results-count { font-size:14px; color:var(--sub); flex:1; }
   .results-count strong { color:var(--text); font-size:15px; }
@@ -132,10 +132,10 @@
   .btn-excel:hover { background:rgba(34,197,94,.16); }
 
   /* ═══ TWO PANEL: LIST + DETAIL ═══ */
-  .results-body { flex:1; display:flex; overflow:hidden; }
+  .results-body { flex:1; display:flex; overflow:hidden; min-height:0; }
 
-  .jobs-list { width:420px; flex-shrink:0; overflow-y:auto; border-right:1px solid var(--border); }
-  .job-detail { flex:1; overflow-y:auto; background:var(--bg); }
+  .jobs-list { width:420px; flex-shrink:0; overflow-y:auto; overflow-x:hidden; border-right:1px solid var(--border); min-height:0; }
+  .job-detail { flex:1; min-width:0; overflow-y:auto; background:var(--bg); }
 
   /* ═══ SKELETON LOADING ═══ */
   .skeleton-list { padding:12px; display:flex; flex-direction:column; gap:8px; }
