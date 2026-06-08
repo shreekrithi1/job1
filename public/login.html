@@ -289,10 +289,12 @@
 <script>
 const GW = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
 
-// ── Random hero image on every page load ──
+// ── Alternating hero image — flips on every page load/refresh ──
 (function() {
-  if (Math.random() < 0.5) {
-    // Global variant
+  const last = localStorage.getItem('jf_hero') || 'us';
+  const next = last === 'us' ? 'global' : 'us';
+  localStorage.setItem('jf_hero', next);
+  if (next === 'global') {
     document.getElementById('heroImg').src = 'hero.jpg';
     document.getElementById('heroTag').textContent    = '🌍 Global Opportunities';
     document.getElementById('heroHeadline').innerHTML = 'Your next career move<br/>starts <em>right here</em>';
