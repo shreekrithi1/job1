@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobFinder AI — Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --bg:#0f172a; --surface:#1e293b; --surface2:#273548; --border:#334155;
+      --accent:#6366f1; --accent-h:#818cf8; --green:#22c55e; --amber:#f59e0b;
+      --red:#ef4444; --cyan:#22d3ee; --text:#f1f5f9; --muted:#94a3b8; --faint:#64748b;
+    }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+    nav {
+      background:rgba(30,41,59,.95); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; padding:0 24px; height:60px; gap:16px;
+      position:sticky; top:0; z-index:50; backdrop-filter:blur(10px);
+    }
+    .nav-logo {
+      font-size:18px; font-weight:800;
+      background:linear-gradient(135deg,#a5b4fc,#6366f1,#22d3ee);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .nav-badge { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.35); color:#fca5a5; border-radius:6px; padding:3px 10px; font-size:12px; font-weight:700; }
+    .nav-spacer { flex:1; }
+    .btn-nav { background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:6px 14px; font-size:13px; cursor:pointer; text-decoration:none; transition:background .15s; }
+    .btn-nav:hover { background:var(--border); color:var(--text); }
+
+    main { max-width:1300px; margin:0 auto; padding:28px 20px 60px; }
+
+    h2 { font-size:22px; font-weight:800; margin-bottom:20px; }
+
+    /* Stats */
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+    .stat-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:12px;
+      padding:20px; display:flex; flex-direction:column; gap:6px;
+    }
+    .stat-label { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+    .stat-value { font-size:32px; font-weight:800; }
+    .stat-card.green .stat-value { color:var(--green); }
+    .stat-card.blue  .stat-value { color:var(--accent-h); }
+    .stat-card.amber .stat-value { color:var(--amber); }
+    .stat-card.cyan  .stat-value { color:var(--cyan); }
+
+    /* Tabs */
+    .tabs { display:flex; gap:4px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:4px; margin-bottom:20px; width:fit-content; }
+    .tab { padding:8px 20px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; color:var(--faint); border:none; background:none; transition:all .15s; }
+    .tab.active { background:var(--accent); color:#fff; }
+
+    /* Toolbar */
+    .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+    .search-input {
+      background:var(--surface); border:1px solid var(--border); color:var(--text);
+      border-radius:8px; padding:9px 14px; font-size:13px; width:280px;
+      transition:border-color .2s;
+    }
+    .search-input:focus { outline:none; border-color:var(--accent); }
+    .search-input::placeholder { color:var(--faint); }
+    .total-label { font-size:13px; color:var(--muted); flex:1; }
+
+    /* Table */
+    .table-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    thead tr { background:var(--surface2); }
+    th { padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; border-bottom:1px solid var(--border); }
+    td { padding:10px 14px; border-bottom:1px solid rgba(51,65,85,.5); vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:rgba(99,102,241,.04); }
+    .td-email { color:var(--accent-h); font-family:monospace; font-size:12px; }
+    .td-kw { font-weight:600; }
+    .td-ts { color:var(--faint); font-size:11px; white-space:nowrap; }
+    .badge-sm { display:inline-block; border-radius:4px; padding:2px 7px; font-size:11px; font-weight:600; }
+    .b-yes  { background:rgba(34,197,94,.1);  color:#86efac; border:1px solid rgba(34,197,94,.25); }
+    .b-no   { background:rgba(100,116,139,.1); color:var(--faint); border:1px solid var(--border); }
+    .b-admin { background:rgba(239,68,68,.1); color:#fca5a5; border:1px solid rgba(239,68,68,.25); }
+
+    /* Pagination */
+    .pagination { display:flex; gap:8px; align-items:center; justify-content:center; margin-top:20px; }
+    .btn-page { background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:8px; padding:7px 16px; font-size:13px; cursor:pointer; transition:background .15s; }
+    .btn-page:hover { background:var(--surface2); color:var(--text); }
+    .btn-page:disabled { opacity:.4; cursor:not-allowed; }
+    .page-info { font-size:13px; color:var(--muted); }
+
+    /* Loading / error */
+    .state { display:flex; flex-direction:column; align-items:center; padding:60px 20px; gap:14px; text-align:center; }
+    .spinner { width:40px; height:40px; border:4px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .75s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    .empty-row td { text-align:center; padding:40px; color:var(--faint); }
+
+    @media(max-width:900px) {
+      .stats-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🔍 JobFinder AI</div>
+  <div class="nav-badge">ADMIN</div>
+  <div class="nav-spacer"></div>
+  <span style="font-size:13px;color:var(--muted)" id="adminName"></span>
+  <a href="/" class="btn-nav">← App</a>
+  <button class="btn-nav" onclick="logout()">Sign Out</button>
+</nav>
+
+<main>
+  <h2>Admin Dashboard</h2>
+
+  <!-- STATS -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card blue">  <div class="stat-label">Total Searches</div>  <div class="stat-value" id="sTotalSearches">—</div></div>
+    <div class="stat-card green"> <div class="stat-label">Unique Searchers</div><div class="stat-value" id="sUniqueUsers">—</div></div>
+    <div class="stat-card amber"> <div class="stat-label">Today's Searches</div><div class="stat-value" id="sToday">—</div></div>
+    <div class="stat-card cyan">  <div class="stat-label">Registered Users</div><div class="stat-value" id="sTotalUsers">—</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('logs')">Search Logs</button>
+    <button class="tab"        onclick="switchTab('users')">Users</button>
+  </div>
+
+  <!-- SEARCH LOGS TAB -->
+  <div id="logsTab">
+    <div class="toolbar">
+      <input class="search-input" id="logsSearch" placeholder="Filter by email, keyword, country…" oninput="debounceLoad()" />
+      <div class="total-label" id="logsTotal"></div>
+      <button class="btn-nav" onclick="loadData()">↻ Refresh</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Timestamp</th><th>User Email</th><th>Name</th>
+            <th>Keyword</th><th>Location</th><th>Country</th><th>Job Type</th>
+            <th>Portals</th><th>AI</th><th>Results</th>
+          </tr>
+        </thead>
+        <tbody id="logsTbody">
+          <tr><td colspan="11" style="text-align:center;padding:40px;color:var(--faint)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button class="btn-page" id="prevLogBtn" onclick="prevPage()" disabled>← Prev</button>
+      <span class="page-info" id="pageInfo">Page 1</span>
+      <button class="btn-page" id="nextLogBtn" onclick="nextPage()">Next →</button>
+    </div>
+  </div>
+
+  <!-- USERS TAB -->
+  <div id="usersTab" style="display:none">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Email</th><th>Phone Code</th><th>Admin</th><th>Joined</th>
+          </tr>
+        </thead>
+        <tbody id="usersTbody">
+          <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--faint)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+let jwtToken = null;
+let currentPage = 0;
+let totalLogs   = 0;
+const PAGE_LIMIT = 50;
+let debounceTimer;
+
+// Auth guard
+(function() {
+  try {
+    const s = JSON.parse(localStorage.getItem('jf_token_data') || 'null');
+    if (!s || !s.isAdmin || Date.now() - s.ts > 7 * 24 * 60 * 60 * 1000) {
+      window.location.href = '/login.html'; return;
+    }
+    jwtToken = s.token;
+    document.getElementById('adminName').textContent = '👤 ' + s.name;
+  } catch { window.location.href = '/login.html'; }
+})();
+
+function logout() {
+  localStorage.removeItem('jf_token_data');
+  window.location.href = '/login.html';
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tab==='logs'?i===0:i===1));
+  document.getElementById('logsTab').style.display  = tab === 'logs'  ? 'block' : 'none';
+  document.getElementById('usersTab').style.display = tab === 'users' ? 'block' : 'none';
+}
+
+function debounceLoad() {
+  clearTimeout(debounceTimer);
+  currentPage = 0;
+  debounceTimer = setTimeout(loadData, 350);
+}
+
+async function loadData() {
+  const q = document.getElementById('logsSearch').value.trim();
+  const url = `/api/admin?page=${currentPage}&limit=${PAGE_LIMIT}${q ? '&q=' + encodeURIComponent(q) : ''}`;
+
+  try {
+    const resp = await fetch(url, { headers: { Authorization: `Bearer ${jwtToken}` } });
+    if (!resp.ok) { const e = await resp.json(); throw new Error(e.error); }
+    const data = await resp.json();
+
+    // Stats
+    document.getElementById('sTotalSearches').textContent = data.stats.totalSearches;
+    document.getElementById('sUniqueUsers').textContent   = data.stats.uniqueSearchers;
+    document.getElementById('sToday').textContent         = data.stats.todaySearches;
+    document.getElementById('sTotalUsers').textContent    = data.stats.totalUsers;
+
+    // Logs table
+    totalLogs = data.stats.totalSearches;
+    document.getElementById('logsTotal').textContent = `${totalLogs} total entries`;
+    const tbody = document.getElementById('logsTbody');
+    tbody.innerHTML = '';
+    if (!data.logs.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="11">No logs found.</td></tr>';
+    } else {
+      data.logs.forEach((l, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="td-ts">${currentPage * PAGE_LIMIT + i + 1}</td>
+          <td class="td-ts">${formatTs(l.searched_at)}</td>
+          <td class="td-email">${esc(l.user_email)}</td>
+          <td>${esc(l.user_name)}</td>
+          <td class="td-kw">${esc(l.keyword)}</td>
+          <td>${esc(l.location)}</td>
+          <td>${esc(l.country)}</td>
+          <td>${esc(l.job_type)}</td>
+          <td style="font-size:11px;color:var(--faint);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.portals)}</td>
+          <td><span class="badge-sm ${l.semantic ? 'b-yes' : 'b-no'}">${l.semantic ? 'AI' : '—'}</span></td>
+          <td style="font-weight:700">${l.results_count}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Users table
+    const utbody = document.getElementById('usersTbody');
+    utbody.innerHTML = '';
+    if (!data.users.length) {
+      utbody.innerHTML = '<tr class="empty-row"><td colspan="6">No users found.</td></tr>';
+    } else {
+      data.users.forEach((u, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="td-ts">${i + 1}</td>
+          <td><strong>${esc(u.first_name)} ${esc(u.last_name)}</strong></td>
+          <td class="td-email">${esc(u.email)}</td>
+          <td>${esc(u.country_code)}</td>
+          <td><span class="badge-sm ${u.is_admin ? 'b-admin' : 'b-no'}">${u.is_admin ? 'Admin' : 'User'}</span></td>
+          <td class="td-ts">${formatTs(u.created_at)}</td>
+        `;
+        utbody.appendChild(tr);
+      });
+    }
+
+    // Pagination
+    document.getElementById('pageInfo').textContent = `Page ${currentPage + 1}`;
+    document.getElementById('prevLogBtn').disabled = currentPage === 0;
+    document.getElementById('nextLogBtn').disabled = (currentPage + 1) * PAGE_LIMIT >= totalLogs;
+
+  } catch (err) {
+    document.getElementById('logsTbody').innerHTML =
+      `<tr class="empty-row"><td colspan="11" style="color:var(--red)">Error: ${esc(err.message)}</td></tr>`;
+  }
+}
+
+function prevPage() { if (currentPage > 0) { currentPage--; loadData(); } }
+function nextPage() { currentPage++; loadData(); }
+
+function formatTs(ts) {
+  if (!ts) return '—';
+  return new Date(ts).toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Load on mount
+window.addEventListener('DOMContentLoaded', loadData);
+
+// Auto-refresh every 30s
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>
