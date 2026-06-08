@@ -289,20 +289,17 @@
 <script>
 const GW = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
 
-// ── Timezone detection: swap to non-US image if needed ──
+// ── Random hero image on every page load ──
 (function() {
-  const tz   = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-  const US   = ['America/New_York','America/Chicago','America/Denver',
-                'America/Los_Angeles','America/Phoenix','America/Anchorage','Pacific/Honolulu'];
-  if (!US.includes(tz)) {
-    // Non-US visitor → show global hero
+  if (Math.random() < 0.5) {
+    // Global variant
     document.getElementById('heroImg').src = 'hero.jpg';
-    document.getElementById('heroTag').textContent       = '🌍 Global Opportunities';
-    document.getElementById('heroHeadline').innerHTML    = 'Your next career move<br/>starts <em>right here</em>';
-    document.getElementById('heroBody').textContent      = 'Search 100 live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.';
-    document.getElementById('hsl1').textContent          = 'Job Portals';
+    document.getElementById('heroTag').textContent    = '🌍 Global Opportunities';
+    document.getElementById('heroHeadline').innerHTML = 'Your next career move<br/>starts <em>right here</em>';
+    document.getElementById('heroBody').textContent   = 'Search 100 live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.';
+    document.getElementById('hsl1').textContent       = 'Job Portals';
   }
-  // US visitors: defaults already set in HTML
+  // else: US variant — defaults already set in HTML (hero_us.jpg)
 })();
 
 // ── Redirect if already logged in ──
