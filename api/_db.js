@@ -6,9 +6,12 @@ let initialized = false;
 
 function getPool() {
   if (!pool) {
+    // Strip ?sslmode=... from URL — pg handles SSL via the ssl option directly
+    const connStr = (process.env.POSTGRES_URL || '').replace(/[?&]sslmode=[^&]*/g, '');
+    const isLocal = connStr.includes('localhost') || connStr.includes('127.0.0.1');
     pool = new Pool({
-      connectionString: process.env.POSTGRES_URL,
-      ssl: { rejectUnauthorized: false },
+      connectionString: connStr,
+      ssl: isLocal ? false : { rejectUnauthorized: false },
       max: 5,
     });
   }
