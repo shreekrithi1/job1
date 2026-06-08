@@ -1608,9 +1608,17 @@ async function parseCV(){
     cvData=data;
     showCVExtracted(data);
 
-    // Auto-populate keyword/filter fields
-    if(data.title)      document.getElementById('kwInput').value=data.title;
-    if(data.location)   document.getElementById('locInput').value=data.location;
+    // Build keyword: prefer title, fall back to top skills, last resort generic
+    let autoKw = (data.title||'').trim();
+    if(!autoKw && data.skills?.length) autoKw = data.skills.slice(0,3).join(' ');
+    if(!autoKw) autoKw = 'Software Engineer';
+
+    // Populate ALL keyword inputs so doSearch() finds a value
+    ['kwInput','navSearch','mobKwInput'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value=autoKw;
+    });
+
+    if(data.location) document.getElementById('locInput').value=data.location;
     if(data.experience){
       const expSel=document.getElementById('expSelect');
       const expMap={'entry level':'entry level','mid level':'mid level','senior':'senior','manager':'manager','executive':'executive'};
@@ -1618,9 +1626,11 @@ async function parseCV(){
       if(matched) expSel.value=expMap[matched];
     }
 
-    showToast('✅ CV analysed! Searching matching jobs…');
-    // Switch to keyword panel view so user sees filters
+    showToast('✅ CV analysed! Searching for: '+autoKw);
+    // Switch to keyword panel so user sees filters
     switchTab('kw');
+    // Small delay to let DOM settle after tab switch
+    await new Promise(r=>setTimeout(r,80));
     // Run the search
     await doSearch();
 
