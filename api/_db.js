@@ -66,12 +66,12 @@ async function initDB() {
     );
   `);
 
-  // Seed admin user (admin / Charlott5)
-  const adminHash = hashPassword('Charlott5');
+  // Seed admin user (admin / Ch@rlott5)
+  const adminHash = hashPassword('Ch@rlott5');
   await query(`
     INSERT INTO jf_users (first_name, last_name, email, password_hash, is_admin)
     VALUES ('Admin', 'Charlotte', 'admin', $1, TRUE)
-    ON CONFLICT (email) DO NOTHING
+    ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, is_admin = TRUE
   `, [adminHash]);
 
   initialized = true;
