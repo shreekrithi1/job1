@@ -43,6 +43,12 @@
     background:linear-gradient(130deg,#a5b4fc 0%,#6366f1 50%,#22d3ee 100%);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
+  .edu-badge {
+    background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.25);
+    color:#fcd34d; border-radius:6px; padding:3px 10px;
+    font-size:11px; font-weight:700; letter-spacing:.3px; white-space:nowrap;
+  }
+  @media(max-width:600px){ .edu-badge { display:none; } }
   .nav-search-wrap { flex:1; max-width:520px; position:relative; }
   .nav-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--faint); pointer-events:none; }
   .nav-search { width:100%; background:var(--panel); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:8px 12px 8px 36px; font-size:14px; transition:border-color .2s, box-shadow .2s; }
@@ -112,6 +118,23 @@
 
   .btn-clear-all { width:100%; background:transparent; border:1px solid var(--border); color:var(--faint); border-radius:8px; padding:8px; font-size:12px; cursor:pointer; transition:all .15s; }
   .btn-clear-all:hover { border-color:var(--sub); color:var(--sub); }
+
+  /* Powered-by strip */
+  .powered-by { display:flex; flex-direction:column; gap:8px; padding:12px 0 4px; border-top:1px solid var(--border); margin-top:4px; }
+  .pb-label { font-size:10px; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:.6px; }
+  .pb-logos { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .pb-logo {
+    display:flex; align-items:center; gap:5px;
+    background:rgba(255,255,255,.03); border:1px solid var(--border);
+    border-radius:7px; padding:5px 9px; text-decoration:none;
+    transition:border-color .15s, background .15s;
+  }
+  .pb-logo:hover { background:rgba(255,255,255,.06); border-color:var(--border-h); }
+  .pb-logo img { width:16px; height:16px; border-radius:3px; flex-shrink:0; }
+  .pb-logo span { font-size:11px; font-weight:600; color:var(--sub); white-space:nowrap; }
+  .pb-logo.gemma span  { color:#4ade80; }
+  .pb-logo.ollama span { color:#e2e8f0; }
+  .pb-logo.hostinger span { color:#a78bfa; }
 
   /* ═══ MAIN CONTENT ═══ */
   .main-content { flex:1; min-width:0; display:flex; flex-direction:column; height:100%; overflow:hidden; }
@@ -375,6 +398,7 @@
 <!-- ═══ TOP NAV ═══ -->
 <nav class="topnav">
   <div class="nav-logo">iCareeer</div>
+  <span class="edu-badge">📚 Education Purpose Only</span>
   <div class="nav-search-wrap">
     <svg class="nav-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input class="nav-search" id="navSearch" type="text" placeholder="Search jobs, skills, companies…" />
@@ -531,6 +555,25 @@
       </div>
 
       <button class="btn-clear-all" onclick="clearSearch()">✕ Clear all filters</button>
+
+      <!-- Powered by -->
+      <div class="powered-by">
+        <div class="pb-label">Powered by</div>
+        <div class="pb-logos">
+          <a class="pb-logo gemma" href="https://ai.google.dev/gemma" target="_blank" rel="noopener" title="Gemma by Google">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=ai.google.dev" alt="Gemma" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%2212%22 r=%2212%22 fill=%22%234285f4%22/><text x=%2212%22 y=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2212%22 font-family=%22sans-serif%22>G</text></svg>'" />
+            <span>Gemma</span>
+          </a>
+          <a class="pb-logo ollama" href="https://ollama.ai" target="_blank" rel="noopener" title="Ollama">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=ollama.ai" alt="Ollama" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%2212%22 r=%2212%22 fill=%22%23333%22/><text x=%2212%22 y=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2210%22 font-family=%22sans-serif%22>OL</text></svg>'" />
+            <span>Ollama</span>
+          </a>
+          <a class="pb-logo hostinger" href="https://hostinger.com" target="_blank" rel="noopener" title="Hostinger">
+            <img src="https://www.google.com/s2/favicons?sz=32&domain=hostinger.com" alt="Hostinger" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><circle cx=%2212%22 cy=%2212%22 r=%2212%22 fill=%22%237c3aed%22/><text x=%2212%22 y=%2216%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2210%22 font-family=%22sans-serif%22>H</text></svg>'" />
+            <span>Hostinger</span>
+          </a>
+        </div>
+      </div>
     </div>
   </aside>
 
