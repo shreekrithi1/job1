@@ -38,6 +38,7 @@
       height:100%;
       object-fit:cover;
       object-position:center 20%;
+      transition: opacity 1.4s ease;
     }
 
     /* Gradient overlay so caption is readable */
@@ -55,6 +56,7 @@
       bottom:0; left:0; right:0;
       padding:40px 36px;
       z-index:1;
+      transition: opacity 0.7s ease;
     }
     .hero-tag {
       display:inline-flex; align-items:center; gap:6px;
@@ -182,7 +184,8 @@
 
 <!-- ═══ LEFT: HERO ═══ -->
 <div class="hero">
-  <img class="hero-img" id="heroImg" src="hero_us.jpg" alt="" />
+  <img class="hero-img" id="heroImg"  src="hero_us.jpg" alt="" style="opacity:1" />
+  <img class="hero-img" id="heroImg2" src="hero.jpg"    alt="" style="opacity:0" />
   <div class="hero-overlay"></div>
   <div class="hero-caption">
     <div class="hero-tag" id="heroTag">🇺🇸 US Job Market</div>
@@ -289,19 +292,57 @@
 <script>
 const GW = 'HMDA899CwJOrPICTLxa3r0ujxcmLx2Hm';
 
-// ── Alternating hero image — flips on every page load/refresh ──
+// ── Hero slideshow — crossfades between US & Global every 7 seconds ──
 (function() {
-  const last = localStorage.getItem('jf_hero') || 'us';
-  const next = last === 'us' ? 'global' : 'us';
-  localStorage.setItem('jf_hero', next);
-  if (next === 'global') {
-    document.getElementById('heroImg').src = 'hero.jpg';
-    document.getElementById('heroTag').textContent    = '🌍 Global Opportunities';
-    document.getElementById('heroHeadline').innerHTML = 'Your next career move<br/>starts <em>right here</em>';
-    document.getElementById('heroBody').textContent   = 'Search 100 live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.';
-    document.getElementById('hsl1').textContent       = 'Job Portals';
+  const VARIANTS = [
+    {
+      img:      'hero_us.jpg',
+      tag:      '🇺🇸 US Job Market',
+      headline: 'Land your dream job<br/>across <em>America</em>',
+      body:     'Search thousands of US openings on LinkedIn, Indeed, ZipRecruiter, Glassdoor, Dice and more — all in one AI-powered search.',
+      stat1:    'US Job Portals',
+    },
+    {
+      img:      'hero.jpg',
+      tag:      '🌍 Global Opportunities',
+      headline: 'Your next career move<br/>starts <em>right here</em>',
+      body:     'Search 100 live job listings across 20 top portals worldwide — LinkedIn, Indeed, Glassdoor and more — powered by AI.',
+      stat1:    'Job Portals',
+    }
+  ];
+
+  const img1    = document.getElementById('heroImg');
+  const img2    = document.getElementById('heroImg2');
+  const caption = document.querySelector('.hero-caption');
+  let idx = 0;   // currently visible variant index
+
+  function applyCaption(v) {
+    document.getElementById('heroTag').textContent    = v.tag;
+    document.getElementById('heroHeadline').innerHTML = v.headline;
+    document.getElementById('heroBody').textContent   = v.body;
+    document.getElementById('hsl1').textContent       = v.stat1;
   }
-  // else: US variant — defaults already set in HTML (hero_us.jpg)
+
+  // Initialise with first variant (already set in HTML)
+  applyCaption(VARIANTS[0]);
+
+  setInterval(() => {
+    idx = 1 - idx;
+    const next = VARIANTS[idx];
+    const incoming = idx === 1 ? img2 : img1;
+    const outgoing  = idx === 1 ? img1 : img2;
+
+    // Crossfade images
+    incoming.style.opacity = '1';
+    outgoing.style.opacity  = '0';
+
+    // Fade caption out, swap text, fade back in
+    caption.style.opacity = '0';
+    setTimeout(() => {
+      applyCaption(next);
+      caption.style.opacity = '1';
+    }, 700);
+  }, 7000);
 })();
 
 // ── Redirect if already logged in ──
