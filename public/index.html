@@ -496,6 +496,74 @@
     border-radius:9px; padding:10px 18px; font-size:14px; font-weight:700;
     cursor:pointer; white-space:nowrap; min-height:44px;
   }
+
+  /* ═══ HEADER PAGE TABS ═══ */
+  .nav-page-tabs { display:flex; align-items:center; gap:4px; }
+  .nav-ptab {
+    background:transparent; border:none; color:var(--sub);
+    border-radius:7px; padding:5px 11px; font-size:12px; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
+    white-space:nowrap;
+  }
+  .nav-ptab:hover { background:rgba(255,255,255,.06); color:var(--text); }
+  .nav-ptab.active { background:rgba(99,102,241,.15); color:var(--accent-h); }
+  .nav-ptab-icon { font-size:13px; }
+
+  /* ═══ FULL-PAGE PANELS ═══ */
+  .fullpage {
+    display:none; flex-direction:column;
+    height:calc(100vh - 56px); overflow-y:auto;
+    background:var(--bg);
+  }
+  .fullpage.active { display:flex; }
+  .fp-container { max-width:820px; margin:0 auto; padding:36px 24px; width:100%; }
+  .fp-hero { margin-bottom:28px; }
+  .fp-title { font-size:22px; font-weight:800; color:var(--text); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+  .fp-sub { font-size:13px; color:var(--sub); line-height:1.6; }
+  .fp-card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; }
+  .fp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--faint); margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+  .fp-input { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:9px 13px; font-size:13px; transition:border-color .2s; box-sizing:border-box; }
+  .fp-input:focus { outline:none; border-color:var(--accent); }
+  .fp-input::placeholder { color:var(--faint); }
+  .fp-textarea { width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:10px 13px; font-size:12px; line-height:1.6; resize:vertical; font-family:inherit; transition:border-color .2s; box-sizing:border-box; }
+  .fp-textarea:focus { outline:none; border-color:var(--accent); }
+  .fp-textarea::placeholder { color:var(--faint); }
+  .fp-or { display:flex; align-items:center; gap:8px; margin:10px 0; color:var(--faint); font-size:11px; }
+  .fp-or::before, .fp-or::after { content:''; flex:1; height:1px; background:var(--border); }
+  .fp-btn {
+    background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none;
+    border-radius:9px; padding:13px 20px; font-size:14px; font-weight:700;
+    cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center;
+    gap:8px; transition:opacity .2s; box-shadow:0 4px 14px rgba(99,102,241,.3);
+  }
+  .fp-btn:hover { opacity:.9; }
+  .fp-btn:disabled { opacity:.45; cursor:not-allowed; }
+  .fp-btn-secondary {
+    background:var(--panel); color:var(--sub); border:1px solid var(--border);
+    border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600;
+    cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    transition:all .15s;
+  }
+  .fp-btn-secondary:hover { background:var(--card); color:var(--text); }
+  .fp-result-card {
+    background:var(--panel); border:1px solid rgba(99,102,241,.25);
+    border-radius:12px; padding:24px; margin-top:20px;
+    animation: fadeIn .3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+  .fp-result-text { white-space:pre-wrap; font-size:13.5px; line-height:1.8; color:var(--text); font-family:inherit; }
+  .fp-actions { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+
+  /* Prep page */
+  .prep-launch-card {
+    background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(139,92,246,.08));
+    border:1px solid rgba(99,102,241,.3); border-radius:14px;
+    padding:28px 24px; text-align:center; margin-top:20px;
+  }
+  .prep-launch-icon { font-size:52px; margin-bottom:14px; }
+  .prep-launch-title { font-size:18px; font-weight:800; color:var(--accent-h); margin-bottom:6px; }
+  .prep-launch-sub { font-size:13px; color:var(--sub); margin-bottom:20px; line-height:1.6; }
+  .fp-spinner { display:none; width:18px; height:18px; border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
   </style>
 </head>
 <body>
@@ -506,6 +574,17 @@
 <nav class="topnav">
   <div class="nav-logo">iCareeer</div>
   <span class="edu-badge">📚 Education Purpose Only</span>
+  <div class="nav-page-tabs">
+    <button class="nav-ptab active" id="ptabJobs" onclick="switchPage('jobs')">
+      <span class="nav-ptab-icon">🔍</span> Jobs
+    </button>
+    <button class="nav-ptab" id="ptabCover" onclick="switchPage('cover')">
+      <span class="nav-ptab-icon">✉️</span> Cover Letter
+    </button>
+    <button class="nav-ptab" id="ptabPrep" onclick="switchPage('prep')">
+      <span class="nav-ptab-icon">🎯</span> Prep
+    </button>
+  </div>
   <div class="nav-search-wrap">
     <svg class="nav-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input class="nav-search" id="navSearch" type="text" placeholder="Search jobs, skills, companies…" />
@@ -524,6 +603,85 @@
     </button>
   </div>
 </nav>
+
+<!-- ═══ COVER LETTER PAGE ═══ -->
+<div class="fullpage" id="coverPage">
+  <div class="fp-container">
+    <div class="fp-hero">
+      <div class="fp-title">✉️ Cover Letter Generator</div>
+      <div class="fp-sub">Paste your CV and the job URL — Gemma AI writes a tailored cover letter in seconds.</div>
+    </div>
+
+    <div class="fp-card">
+      <div class="fp-label">📄 Your CV / Resume</div>
+      <textarea class="fp-textarea" id="clCvText" rows="8" placeholder="Paste your CV / resume text here…"></textarea>
+      <div class="fp-or">or upload a file</div>
+      <input type="file" id="clCvFile" accept=".pdf,.txt,.doc,.docx,.md" style="font-size:12px;color:var(--sub)" onchange="loadClCvFile(this)" />
+    </div>
+
+    <div class="fp-card">
+      <div class="fp-label">🔗 Job Posting URL</div>
+      <input class="fp-input" id="clJdUrl" type="url" placeholder="https://linkedin.com/jobs/… or any job site URL" />
+      <div class="fp-or">or paste the job description</div>
+      <div class="fp-label">📋 Job Description</div>
+      <textarea class="fp-textarea" id="clJdText" rows="6" placeholder="Paste the full job description here…"></textarea>
+    </div>
+
+    <button class="fp-btn" id="clGenBtn" onclick="generateCoverLetter()">
+      <div class="fp-spinner" id="clSpinner"></div>
+      <span id="clBtnLabel">✨ Generate Cover Letter with Gemma AI</span>
+    </button>
+
+    <div id="clResultWrap" style="display:none">
+      <div class="fp-result-card">
+        <div class="fp-label" style="margin-bottom:14px">✅ Generated Cover Letter</div>
+        <div class="fp-result-text" id="clResultText"></div>
+        <div class="fp-actions">
+          <button class="fp-btn-secondary" onclick="copyClResult()">📋 Copy to Clipboard</button>
+          <button class="fp-btn-secondary" onclick="downloadClResult()">⬇ Download .txt</button>
+          <button class="fp-btn-secondary" onclick="regenerateCoverLetter()">🔄 Regenerate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PREP PAGE ═══ -->
+<div class="fullpage" id="prepPage">
+  <div class="fp-container">
+    <div class="fp-hero">
+      <div class="fp-title">🎯 Interview Prep</div>
+      <div class="fp-sub">Powered by <strong style="color:var(--accent-h)">KeyframeLabs.ai</strong> — an AI interview preparation agent. Provide your CV and job URL, then launch your personalised coaching session.</div>
+    </div>
+
+    <div class="fp-card">
+      <div class="fp-label">📄 Your CV / Resume</div>
+      <textarea class="fp-textarea" id="prepCvText" rows="8" placeholder="Paste your CV / resume text here…"></textarea>
+      <div class="fp-or">or upload a file</div>
+      <input type="file" id="prepCvFile" accept=".pdf,.txt,.doc,.docx,.md" style="font-size:12px;color:var(--sub)" onchange="loadPrepCvFile(this)" />
+    </div>
+
+    <div class="fp-card">
+      <div class="fp-label">🔗 Job Posting URL</div>
+      <input class="fp-input" id="prepJdUrl" type="url" placeholder="https://… job posting URL" />
+      <div class="fp-or">or paste the job description</div>
+      <div class="fp-label">📋 Job Description</div>
+      <textarea class="fp-textarea" id="prepJdText" rows="5" placeholder="Paste the job description here…"></textarea>
+    </div>
+
+    <div class="prep-launch-card">
+      <div class="prep-launch-icon">🎯</div>
+      <div class="prep-launch-title">KeyframeLabs.ai Interview Coach</div>
+      <div class="prep-launch-sub">An AI-powered interview preparation agent that analyses your CV against the job requirements, generates role-specific interview questions, and coaches you through answers — deployed on Docker.</div>
+      <button class="fp-btn" style="max-width:320px;margin:0 auto" onclick="launchKeyframeLabs()">
+        🚀 Launch Interview Prep Session
+      </button>
+      <div id="prepCopyNote" style="margin-top:12px;font-size:11px;color:var(--faint);display:none">
+        ✅ CV copied to clipboard — paste it into KeyframeLabs when prompted.
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ MAIN LAYOUT ═══ -->
 <div class="layout">
@@ -1681,6 +1839,151 @@ function initPTR(){
   document.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;pull=window.scrollY===0;},{passive:true});
   document.addEventListener('touchmove',e=>{ if(!pull)return; const d=e.touches[0].clientY-sy; if(d>10){ind.classList.add('active');txt.textContent=d>70?'Release to refresh ↑':'Pull to refresh ↓';} },{passive:true});
   document.addEventListener('touchend',e=>{ const d=e.changedTouches[0].clientY-sy; ind.classList.remove('active'); txt.textContent='Pull to refresh'; if(pull&&d>70&&allResults.length>0){ind.classList.add('refreshing');const p={kw:document.getElementById('kwInput').value.trim(),loc:document.getElementById('locInput').value.trim(),country:document.getElementById('countrySelect').value,type:document.getElementById('typeSelect').value,exp:document.getElementById('expSelect').value,from:document.getElementById('fromDate').value,to:document.getElementById('toDate').value,portals:[...activePortals].sort()};localStorage.removeItem(cKey(p));setTimeout(()=>{ind.classList.remove('refreshing');doSearch();},300);}pull=false;});
+}
+
+// ═══════════════════════════════════════════
+// PAGE SWITCHING (Jobs / Cover Letter / Prep)
+// ═══════════════════════════════════════════
+function switchPage(page) {
+  // Toggle layout visibility
+  document.querySelector('.layout').style.display = (page === 'jobs') ? '' : 'none';
+  document.getElementById('coverPage').classList.toggle('active', page === 'cover');
+  document.getElementById('prepPage').classList.toggle('active',  page === 'prep');
+
+  // Update header tab states
+  ['jobs','cover','prep'].forEach(p => {
+    const id = p === 'jobs' ? 'ptabJobs' : p === 'cover' ? 'ptabCover' : 'ptabPrep';
+    document.getElementById(id).classList.toggle('active', p === page);
+  });
+
+  // When switching to Cover Letter, pre-fill CV if already parsed
+  if (page === 'cover' && cvData && !document.getElementById('clCvText').value) {
+    const parts = [cvData.title, cvData.summary, cvData.skills?.join(', ')].filter(Boolean);
+    if (parts.length) document.getElementById('clCvText').value = parts.join('\n\n');
+  }
+  // When switching to Prep, pre-fill CV if already parsed
+  if (page === 'prep' && cvData && !document.getElementById('prepCvText').value) {
+    const parts = [cvData.title, cvData.summary, cvData.skills?.join(', ')].filter(Boolean);
+    if (parts.length) document.getElementById('prepCvText').value = parts.join('\n\n');
+  }
+}
+
+// ═══════════════════════════════════════════
+// COVER LETTER GENERATOR
+// ═══════════════════════════════════════════
+async function generateCoverLetter() {
+  const cvText  = document.getElementById('clCvText').value.trim();
+  const jdUrl   = document.getElementById('clJdUrl').value.trim();
+  const jdText  = document.getElementById('clJdText').value.trim();
+  const btn     = document.getElementById('clGenBtn');
+  const spinner = document.getElementById('clSpinner');
+  const label   = document.getElementById('clBtnLabel');
+
+  if (!cvText) { showToast('⚠️ Please paste your CV first'); return; }
+  if (!jdUrl && !jdText) { showToast('⚠️ Please provide a job URL or paste the job description'); return; }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  label.textContent = 'Generating with Gemma AI…';
+  document.getElementById('clResultWrap').style.display = 'none';
+
+  try {
+    const resp = await fetch('/api/cover-letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-gateway-token': GW },
+      body: JSON.stringify({ cvText, jdUrl: jdUrl || undefined, jdText: jdText || undefined }),
+    });
+    const data = await resp.json();
+    if (!resp.ok || data.error) throw new Error(data.error || 'Generation failed');
+
+    document.getElementById('clResultText').textContent = data.letter;
+    document.getElementById('clResultWrap').style.display = 'block';
+    document.getElementById('clResultWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('✅ Cover letter generated!');
+  } catch (err) {
+    showToast('❌ ' + err.message);
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    label.textContent = '✨ Generate Cover Letter with Gemma AI';
+  }
+}
+
+function regenerateCoverLetter() {
+  document.getElementById('clResultWrap').style.display = 'none';
+  generateCoverLetter();
+}
+
+function copyClResult() {
+  const text = document.getElementById('clResultText').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Copied to clipboard!'));
+}
+
+function downloadClResult() {
+  const text = document.getElementById('clResultText').textContent;
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+  a.download = 'cover_letter.txt';
+  a.click();
+}
+
+// File loaders for Cover Letter and Prep panels
+function loadCvFileInto(input, targetId) {
+  const file = input.files[0];
+  if (!file) return;
+  const ext = (file.name || '').split('.').pop().toLowerCase();
+  if (ext === 'pdf') {
+    loadPdfJs().then(() => {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        try {
+          const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
+          let text = '';
+          for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            text += content.items.map(it => it.str).join(' ') + '\n';
+          }
+          document.getElementById(targetId).value = text.trim();
+          showToast(`📄 PDF loaded (${pdf.numPages} page${pdf.numPages>1?'s':''})`);
+        } catch { showToast('⚠️ Could not parse PDF — try pasting text'); }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  } else {
+    const reader = new FileReader();
+    reader.onload = e => { document.getElementById(targetId).value = e.target.result || ''; showToast('📄 CV loaded'); };
+    reader.readAsText(file);
+  }
+}
+function loadClCvFile(input)   { loadCvFileInto(input, 'clCvText'); }
+function loadPrepCvFile(input) { loadCvFileInto(input, 'prepCvText'); }
+
+// ═══════════════════════════════════════════
+// INTERVIEW PREP — KEYFRAMELABS LAUNCHER
+// ═══════════════════════════════════════════
+function launchKeyframeLabs() {
+  const cvText = document.getElementById('prepCvText').value.trim();
+  const jdUrl  = document.getElementById('prepJdUrl').value.trim();
+  const jdText = document.getElementById('prepJdText').value.trim();
+
+  if (!cvText) { showToast('⚠️ Please paste your CV first'); return; }
+  if (!jdUrl && !jdText) { showToast('⚠️ Please provide a job URL or job description'); return; }
+
+  // Copy CV to clipboard so user can paste into KeyframeLabs when prompted
+  const context = [cvText, jdText ? '\n---\nJOB DESCRIPTION:\n' + jdText : ''].join('');
+  navigator.clipboard.writeText(context).catch(() => {});
+
+  // Build URL — pass jd URL as param if provided
+  const baseUrl = 'https://keyframelabs.ai';
+  const params  = new URLSearchParams();
+  if (jdUrl)  params.set('jd', jdUrl);
+
+  const target = params.toString() ? `${baseUrl}?${params}` : baseUrl;
+  window.open(target, '_blank', 'noopener');
+
+  document.getElementById('prepCopyNote').style.display = 'block';
+  showToast('🚀 KeyframeLabs.ai launched — CV copied to clipboard');
 }
 </script>
 </body>
