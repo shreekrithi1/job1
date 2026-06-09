@@ -616,15 +616,16 @@
       <div class="fp-label">📄 Your CV / Resume</div>
       <textarea class="fp-textarea" id="clCvText" rows="8" placeholder="Paste your CV / resume text here…"></textarea>
       <div class="fp-or">or upload a file</div>
-      <input type="file" id="clCvFile" accept=".pdf,.txt,.doc,.docx,.md" style="font-size:12px;color:var(--sub)" onchange="loadClCvFile(this)" />
+      <input type="file" id="clCvFile" accept=".pdf,.txt,.md" style="font-size:12px;color:var(--sub)" onchange="loadClCvFile(this)" />
+      <div style="font-size:10px;color:var(--faint);margin-top:4px">PDF · TXT · MD only (Word docs: save as PDF first)</div>
     </div>
 
     <div class="fp-card">
-      <div class="fp-label">🔗 Job Posting URL</div>
-      <input class="fp-input" id="clJdUrl" type="url" placeholder="https://linkedin.com/jobs/… or any job site URL" />
-      <div class="fp-or">or paste the job description</div>
-      <div class="fp-label">📋 Job Description</div>
-      <textarea class="fp-textarea" id="clJdText" rows="6" placeholder="Paste the full job description here…"></textarea>
+      <div class="fp-label">🔗 Job Posting URL <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint)">(optional — many sites block fetching)</span></div>
+      <input class="fp-input" id="clJdUrl" type="url" placeholder="https://… job posting URL" />
+      <div class="fp-or">recommended: paste the job description</div>
+      <div class="fp-label">📋 Job Description <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--amber)">★ paste this for best results</span></div>
+      <textarea class="fp-textarea" id="clJdText" rows="6" placeholder="Copy and paste the full job description here — title, responsibilities, requirements…"></textarea>
     </div>
 
     <button class="fp-btn" id="clGenBtn" onclick="generateCoverLetter()">
@@ -658,7 +659,8 @@
       <div class="fp-label">📄 Your CV / Resume</div>
       <textarea class="fp-textarea" id="prepCvText" rows="8" placeholder="Paste your CV / resume text here…"></textarea>
       <div class="fp-or">or upload a file</div>
-      <input type="file" id="prepCvFile" accept=".pdf,.txt,.doc,.docx,.md" style="font-size:12px;color:var(--sub)" onchange="loadPrepCvFile(this)" />
+      <input type="file" id="prepCvFile" accept=".pdf,.txt,.md" style="font-size:12px;color:var(--sub)" onchange="loadPrepCvFile(this)" />
+      <div style="font-size:10px;color:var(--faint);margin-top:4px">PDF · TXT · MD only</div>
     </div>
 
     <div class="fp-card">
@@ -1033,6 +1035,7 @@ function updateQuotaUI() {
 let allResults=[], displayedCount=PAGE_SIZE, activePortals=new Set(PORTALS.map(p=>p.id));
 let fromCache=false, wasEnhanced=false, selectedIdx=-1;
 let cvData=null;        // parsed CV data when in CV mode
+let cvRawText='';       // full original CV text (used by Cover Letter + Prep pages)
 let searchMode='kw';    // 'kw' | 'cv'
 let scrollObserver=null;
 
@@ -1710,6 +1713,7 @@ function readCVFile(file){
             text+=content.items.map(it=>it.str).join(' ')+'\n';
           }
           ta.value=text.trim();
+          cvRawText=ta.value;
           updateDropzoneLabel(name);
           showToast(`✅ PDF loaded: ${pdf.numPages} page(s)`);
         } catch(err){
@@ -1721,7 +1725,7 @@ function readCVFile(file){
   } else {
     // Plain text / doc
     const reader=new FileReader();
-    reader.onload=e=>{ ta.value=e.target.result||''; updateDropzoneLabel(name); };
+    reader.onload=e=>{ ta.value=e.target.result||''; cvRawText=ta.value; updateDropzoneLabel(name); };
     reader.onerror=()=>showToast('⚠️ Could not read file. Try pasting the text.');
     reader.readAsText(file);
   }
@@ -1753,6 +1757,7 @@ function updateDropzoneLabel(name){
 async function parseCV(){
   const text=document.getElementById('cvTextarea').value.trim();
   if(text.length<20){ showToast('⚠️ Please paste your CV text or upload a file first.'); return; }
+  cvRawText=text; // store full raw text for Cover Letter + Prep pages
 
   const btn=document.getElementById('parseBtn');
   btn.disabled=true;
@@ -1856,15 +1861,13 @@ function switchPage(page) {
     document.getElementById(id).classList.toggle('active', p === page);
   });
 
-  // When switching to Cover Letter, pre-fill CV if already parsed
-  if (page === 'cover' && cvData && !document.getElementById('clCvText').value) {
-    const parts = [cvData.title, cvData.summary, cvData.skills?.join(', ')].filter(Boolean);
-    if (parts.length) document.getElementById('clCvText').value = parts.join('\n\n');
+  // When switching to Cover Letter, pre-fill CV with full raw text if available
+  if (page === 'cover' && cvRawText && !document.getElementById('clCvText').value) {
+    document.getElementById('clCvText').value = cvRawText;
   }
-  // When switching to Prep, pre-fill CV if already parsed
-  if (page === 'prep' && cvData && !document.getElementById('prepCvText').value) {
-    const parts = [cvData.title, cvData.summary, cvData.skills?.join(', ')].filter(Boolean);
-    if (parts.length) document.getElementById('prepCvText').value = parts.join('\n\n');
+  // When switching to Prep, pre-fill CV with full raw text if available
+  if (page === 'prep' && cvRawText && !document.getElementById('prepCvText').value) {
+    document.getElementById('prepCvText').value = cvRawText;
   }
 }
 
@@ -1879,12 +1882,16 @@ async function generateCoverLetter() {
   const spinner = document.getElementById('clSpinner');
   const label   = document.getElementById('clBtnLabel');
 
-  if (!cvText) { showToast('⚠️ Please paste your CV first'); return; }
-  if (!jdUrl && !jdText) { showToast('⚠️ Please provide a job URL or paste the job description'); return; }
+  if (!cvText) { showToast('⚠️ Please paste your CV first'); document.getElementById('clCvText').focus(); return; }
+  if (!jdUrl && !jdText) {
+    showToast('⚠️ Please paste the job description below (or provide a URL)');
+    document.getElementById('clJdText').focus();
+    return;
+  }
 
   btn.disabled = true;
   spinner.style.display = 'block';
-  label.textContent = 'Generating with Gemma AI…';
+  label.textContent = jdUrl && !jdText ? 'Fetching job description…' : 'Generating with Gemma AI…';
   document.getElementById('clResultWrap').style.display = 'none';
 
   try {
@@ -1894,8 +1901,18 @@ async function generateCoverLetter() {
       body: JSON.stringify({ cvText, jdUrl: jdUrl || undefined, jdText: jdText || undefined }),
     });
     const data = await resp.json();
+
+    // JD URL fetch failed (LinkedIn / Indeed block bots) → prompt to paste JD instead
+    if (resp.status === 422 || (data.error && data.error.includes('fetch'))) {
+      document.getElementById('clJdText').focus();
+      document.getElementById('clJdText').style.borderColor = 'var(--accent)';
+      showToast('⚠️ Could not fetch that job URL (site blocks bots). Please paste the job description text below.');
+      return;
+    }
+
     if (!resp.ok || data.error) throw new Error(data.error || 'Generation failed');
 
+    label.textContent = 'Finalising…';
     document.getElementById('clResultText').textContent = data.letter;
     document.getElementById('clResultWrap').style.display = 'block';
     document.getElementById('clResultWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1932,6 +1949,14 @@ function loadCvFileInto(input, targetId) {
   const file = input.files[0];
   if (!file) return;
   const ext = (file.name || '').split('.').pop().toLowerCase();
+
+  // DOCX/DOC are binary — can't be read as text; ask user to use PDF or paste
+  if (ext === 'doc' || ext === 'docx') {
+    showToast('⚠️ Word files not supported here — please save as PDF or paste the text');
+    input.value = '';
+    return;
+  }
+
   if (ext === 'pdf') {
     loadPdfJs().then(() => {
       const reader = new FileReader();
@@ -1944,15 +1969,23 @@ function loadCvFileInto(input, targetId) {
             const content = await page.getTextContent();
             text += content.items.map(it => it.str).join(' ') + '\n';
           }
-          document.getElementById(targetId).value = text.trim();
+          const extracted = text.trim();
+          document.getElementById(targetId).value = extracted;
+          cvRawText = extracted; // share with other pages
           showToast(`📄 PDF loaded (${pdf.numPages} page${pdf.numPages>1?'s':''})`);
         } catch { showToast('⚠️ Could not parse PDF — try pasting text'); }
       };
       reader.readAsArrayBuffer(file);
     });
   } else {
+    // Plain text / MD
     const reader = new FileReader();
-    reader.onload = e => { document.getElementById(targetId).value = e.target.result || ''; showToast('📄 CV loaded'); };
+    reader.onload = e => {
+      const t = e.target.result || '';
+      document.getElementById(targetId).value = t;
+      cvRawText = t;
+      showToast('📄 CV loaded');
+    };
     reader.readAsText(file);
   }
 }
