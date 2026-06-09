@@ -67,7 +67,7 @@
 
   /* Left sidebar */
   .sidebar {
-    width:280px; flex-shrink:0;
+    width:320px; flex-shrink:0;
     border-right:1px solid var(--border);
     background:var(--panel);
     overflow:hidden;
@@ -75,6 +75,7 @@
     display:flex; flex-direction:column;
   }
   .sidebar-inner { padding:8px 10px; display:flex; flex-direction:column; gap:6px; flex:1; min-height:0; overflow:hidden; }
+  .sidebar-inner.cv-mode { overflow-y:auto; }
 
   /* Search hero in sidebar */
   .search-hero { display:flex; flex-direction:column; gap:6px; }
@@ -375,7 +376,7 @@
 
   /* ── 900px: tablet — single panel, detail as overlay ── */
   @media(max-width:900px) {
-    .sidebar { width:260px; }
+    .sidebar { width:300px; }
     .jobs-list { width:100%; border-right:none; }
     .job-detail { display:none; }
     .job-detail.show {
@@ -1483,6 +1484,8 @@ function switchTab(mode){
   document.getElementById('tabCv').classList.toggle('active', mode==='cv');
   document.getElementById('kwPanel').classList.toggle('hidden', mode==='cv');
   document.getElementById('cvPanel').classList.toggle('active', mode==='cv');
+  // Allow scrolling in CV mode; lock it in keyword mode
+  document.querySelector('.sidebar-inner').classList.toggle('cv-mode', mode==='cv');
   if(mode==='cv'){
     document.getElementById('cvTextarea').focus();
   }
