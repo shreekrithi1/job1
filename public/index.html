@@ -564,6 +564,15 @@
   .prep-launch-title { font-size:18px; font-weight:800; color:var(--accent-h); margin-bottom:6px; }
   .prep-launch-sub { font-size:13px; color:var(--sub); margin-bottom:20px; line-height:1.6; }
   .fp-spinner { display:none; width:18px; height:18px; border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+  /* Prep Q&A results */
+  .prep-qa-list { display:flex; flex-direction:column; gap:8px; }
+  .prep-qa-item { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .prep-qa-q { padding:12px 14px; font-size:13px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:flex-start; gap:10px; background:var(--card); transition:background .15s; }
+  .prep-qa-q:hover { background:var(--hover); }
+  .prep-qa-cat { font-size:10px; color:var(--faint); font-weight:400; white-space:nowrap; margin-top:2px; }
+  .prep-qa-arrow { font-size:11px; color:var(--faint); flex-shrink:0; margin-top:2px; }
+  .prep-qa-a { padding:12px 14px; font-size:12px; color:var(--sub); line-height:1.65; display:none; border-top:1px solid var(--border); background:var(--bg); }
+  .prep-qa-a.open { display:block; }
   </style>
 </head>
 <body>
@@ -652,7 +661,7 @@
   <div class="fp-container">
     <div class="fp-hero">
       <div class="fp-title">🎯 Interview Prep</div>
-      <div class="fp-sub">Powered by <strong style="color:var(--accent-h)">KeyframeLabs.ai</strong> — an AI interview preparation agent. Provide your CV and job URL, then launch your personalised coaching session.</div>
+      <div class="fp-sub">AI-generated interview questions tailored to your CV and the job description, with suggested answer approaches for each question.</div>
     </div>
 
     <div class="fp-card">
@@ -673,14 +682,17 @@
 
     <div class="prep-launch-card">
       <div class="prep-launch-icon">🎯</div>
-      <div class="prep-launch-title">KeyframeLabs.ai Interview Coach</div>
-      <div class="prep-launch-sub">An AI-powered interview preparation agent that analyses your CV against the job requirements, generates role-specific interview questions, and coaches you through answers — deployed on Docker.</div>
-      <button class="fp-btn" style="max-width:320px;margin:0 auto" onclick="launchKeyframeLabs()">
-        🚀 Launch Interview Prep Session
+      <div class="prep-launch-title">Generate Interview Questions</div>
+      <div class="prep-launch-sub">8 tailored questions across Technical, Behavioural, Experience, and Motivation categories — matched to your CV and the specific role.</div>
+      <button class="fp-btn" id="prepGenBtn" style="max-width:320px;margin:0 auto" onclick="generateInterviewPrep()">
+        <div class="fp-spinner" id="prepSpinner"></div>
+        <span id="prepBtnLabel">🎯 Generate Interview Questions</span>
       </button>
-      <div id="prepCopyNote" style="margin-top:12px;font-size:11px;color:var(--faint);display:none">
-        ✅ CV copied to clipboard — paste it into KeyframeLabs when prompted.
-      </div>
+    </div>
+
+    <div id="prepResultWrap" style="display:none;margin-top:24px">
+      <div class="fp-label" style="margin-bottom:10px">💡 Click any question to see the suggested approach</div>
+      <div class="prep-qa-list" id="prepQaList"></div>
     </div>
   </div>
 </div>
@@ -1993,9 +2005,9 @@ function loadClCvFile(input)   { loadCvFileInto(input, 'clCvText'); }
 function loadPrepCvFile(input) { loadCvFileInto(input, 'prepCvText'); }
 
 // ═══════════════════════════════════════════
-// INTERVIEW PREP — KEYFRAMELABS LAUNCHER
+// INTERVIEW PREP — AI QUESTION GENERATOR
 // ═══════════════════════════════════════════
-function launchKeyframeLabs() {
+async function generateInterviewPrep() {
   const cvText = document.getElementById('prepCvText').value.trim();
   const jdUrl  = document.getElementById('prepJdUrl').value.trim();
   const jdText = document.getElementById('prepJdText').value.trim();
@@ -2003,20 +2015,72 @@ function launchKeyframeLabs() {
   if (!cvText) { showToast('⚠️ Please paste your CV first'); return; }
   if (!jdUrl && !jdText) { showToast('⚠️ Please provide a job URL or job description'); return; }
 
-  // Copy CV to clipboard so user can paste into KeyframeLabs when prompted
-  const context = [cvText, jdText ? '\n---\nJOB DESCRIPTION:\n' + jdText : ''].join('');
-  navigator.clipboard.writeText(context).catch(() => {});
+  const btn     = document.getElementById('prepGenBtn');
+  const spinner = document.getElementById('prepSpinner');
+  const label   = document.getElementById('prepBtnLabel');
 
-  // Build URL — pass jd URL as param if provided
-  const baseUrl = 'https://keyframelabs.ai';
-  const params  = new URLSearchParams();
-  if (jdUrl)  params.set('jd', jdUrl);
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  label.textContent = jdUrl && !jdText ? 'Fetching job description…' : 'Generating questions…';
 
-  const target = params.toString() ? `${baseUrl}?${params}` : baseUrl;
-  window.open(target, '_blank', 'noopener');
+  try {
+    const resp = await fetch('/api/interview-prep', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-gateway-token': GW },
+      body: JSON.stringify({ cvText, jdUrl: jdUrl || undefined, jdText: jdText || undefined }),
+    });
 
-  document.getElementById('prepCopyNote').style.display = 'block';
-  showToast('🚀 KeyframeLabs.ai launched — CV copied to clipboard');
+    const data = await resp.json();
+
+    if (resp.status === 422 || (data.error && data.error.includes('fetch'))) {
+      document.getElementById('prepJdText').focus();
+      document.getElementById('prepJdText').style.borderColor = 'var(--accent)';
+      showToast('⚠️ Could not fetch that URL — please paste the job description below');
+      return;
+    }
+    if (!resp.ok || data.error) throw new Error(data.error || 'Generation failed');
+
+    renderPrepQuestions(data.questions);
+    document.getElementById('prepResultWrap').style.display = 'block';
+    document.getElementById('prepResultWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('✅ Interview questions ready!');
+
+  } catch(err) {
+    showToast('❌ ' + err.message);
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    label.textContent = '🎯 Generate Interview Questions';
+  }
+}
+
+function renderPrepQuestions(questions) {
+  const list = document.getElementById('prepQaList');
+  list.innerHTML = questions.map((item, i) => `
+    <div class="prep-qa-item">
+      <div class="prep-qa-q" onclick="togglePrepQa(${i})">
+        <div style="flex:1">
+          <span>Q${i+1}. ${escHtml(item.q)}</span>
+          <div class="prep-qa-cat">${escHtml(item.category || '')}</div>
+        </div>
+        <span class="prep-qa-arrow" id="prepQaArrow${i}">▼</span>
+      </div>
+      <div class="prep-qa-a" id="prepQaA${i}">
+        <strong style="color:var(--accent-h)">Suggested approach:</strong><br><br>${escHtml(item.a).replace(/\n/g,'<br>')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function togglePrepQa(i) {
+  const el    = document.getElementById('prepQaA' + i);
+  const arrow = document.getElementById('prepQaArrow' + i);
+  el.classList.toggle('open');
+  arrow.textContent = el.classList.contains('open') ? '▲' : '▼';
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
